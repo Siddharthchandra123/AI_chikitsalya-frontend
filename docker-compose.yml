@@ -1,0 +1,29 @@
+services:
+  model-api:
+    build: ./backend
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+  web:
+    build:
+      context: .
+      dockerfile: dockerfile.frontend
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      MODEL_API_URL: http://model-api:8000
+      DATA_DIR: /app/data
+    volumes:
+      - opd-data:/app/data
+    depends_on:
+      model-api:
+        condition: service_healthy
+
+volumes:
+  opd-data:
+

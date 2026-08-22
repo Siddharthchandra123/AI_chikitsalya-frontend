@@ -1,0 +1,2002 @@
+[
+  {
+    "name": "Prakash Hospital Pvt Ltd",
+    "address": "Delhi",
+    "category": "Multispeciality",
+    "icon": "🏥",
+    "lat": 28.5854878,
+    "lon": 77.3494026,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "Sumitra Hospital",
+    "address": "Delhi",
+    "category": "Multispeciality",
+    "icon": "🏥",
+    "lat": 28.5818659,
+    "lon": 77.3529095,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "Base Hospital Delhi Cantt",
+    "address": "Delhi",
+    "category": "Multispeciality",
+    "icon": "🏥",
+    "lat": 28.6082403,
+    "lon": 77.1366732,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "Kailash Hospital & Heart Institute",
+    "address": "Sector 27",
+    "category": "Multispeciality",
+    "icon": "🏥",
+    "lat": 28.577404,
+    "lon": 77.3314139,
+    "phone": "0120 244 4444",
+    "source": "feed"
+  },
+  {
+    "name": "Delhi Heart and Lung Institute Super Speciality Hospital",
+    "address": "Delhi",
+    "category": "Multispeciality",
+    "icon": "🏥",
+    "lat": 28.6416777,
+    "lon": 77.2052683,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "Indraprastha Apollo Hospital",
+    "address": "Delhi",
+    "category": "Multispeciality",
+    "icon": "🏥",
+    "lat": 28.5408389,
+    "lon": 77.2834999,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "Ayushman Hospital",
+    "address": "Delhi",
+    "category": "Multispeciality",
+    "icon": "🏥",
+    "lat": 28.5965201,
+    "lon": 77.0493833,
+    "phone": "42811114",
+    "source": "feed"
+  },
+  {
+    "name": "Govt Dispensory",
+    "address": "Delhi",
+    "category": "Multispeciality",
+    "icon": "🏥",
+    "lat": 28.5866431,
+    "lon": 77.0573761,
+    "phone": "25081423",
+    "source": "feed"
+  },
+  {
+    "name": "Ayurvedic Mental Hospital",
+    "address": "Delhi",
+    "category": "Multispeciality",
+    "icon": "🏥",
+    "lat": 28.7237864,
+    "lon": 77.1497987,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "Sukhda Hospital",
+    "address": "Delhi",
+    "category": "Multispeciality",
+    "icon": "🏥",
+    "lat": 28.5469254,
+    "lon": 77.2445375,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "Ram Lal Kundan Lal Orthopaedic Hospital",
+    "address": "Pandav Nagar, New Delhi",
+    "category": "Multispeciality",
+    "icon": "🏥",
+    "lat": 28.6179569,
+    "lon": 77.2866841,
+    "phone": "+91 11 4318 9000;+91 11 4318 9099",
+    "source": "feed"
+  },
+  {
+    "name": "Dr. Shyama Prasad Mukherjee Chest Hospital",
+    "address": "Delhi",
+    "category": "Multispeciality",
+    "icon": "🏥",
+    "lat": 28.6140205,
+    "lon": 77.2898985,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "Yashoda Super Speciality Hospital, Anand Vihar",
+    "address": "Delhi",
+    "category": "Multispeciality",
+    "icon": "🏥",
+    "lat": 28.6450931,
+    "lon": 77.3287535,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "Sujan Mohinder Singh Hospital",
+    "address": "Delhi",
+    "category": "Multispeciality",
+    "icon": "🏥",
+    "lat": 28.5629027,
+    "lon": 77.2685753,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "Shanti Gopal Hospital",
+    "address": "Delhi",
+    "category": "Multispeciality",
+    "icon": "🏥",
+    "lat": 28.6418223,
+    "lon": 77.3792669,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "NMC Hospital",
+    "address": "Delhi",
+    "category": "Multispeciality",
+    "icon": "🏥",
+    "lat": 28.5729253,
+    "lon": 77.3402993,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "Bhardwaj Hospital",
+    "address": "Delhi",
+    "category": "Multispeciality",
+    "icon": "🏥",
+    "lat": 28.5660388,
+    "lon": 77.3355783,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "Ojjus Hospital",
+    "address": "Delhi",
+    "category": "Multispeciality",
+    "icon": "🏥",
+    "lat": 28.5654904,
+    "lon": 77.3595236,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "Goyal MRI & Diagnostic Centre",
+    "address": "Safdarjung Enclave",
+    "category": "Multispeciality",
+    "icon": "🏥",
+    "lat": 28.5647144,
+    "lon": 77.1893283,
+    "phone": "+91-11-40771234",
+    "source": "feed"
+  },
+  {
+    "name": "MGS Hospital",
+    "address": "Delhi",
+    "category": "Multispeciality",
+    "icon": "🏥",
+    "lat": 28.6739027,
+    "lon": 77.1346394,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "Maharaja Agrasen Hospital",
+    "address": "Delhi",
+    "category": "Multispeciality",
+    "icon": "🏥",
+    "lat": 28.6740586,
+    "lon": 77.1340566,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "A One Hospital",
+    "address": "Delhi",
+    "category": "Multispeciality",
+    "icon": "🏥",
+    "lat": 28.67882,
+    "lon": 77.0981158,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "Majeedia Hospital",
+    "address": "Delhi",
+    "category": "Multispeciality",
+    "icon": "🏥",
+    "lat": 28.5148169,
+    "lon": 77.2518253,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "Somdatt Medical",
+    "address": "Delhi",
+    "category": "Multispeciality",
+    "icon": "🏥",
+    "lat": 28.6293605,
+    "lon": 77.276622,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "R D Jindal Charitable Clinic",
+    "address": "Asaf Ali Road",
+    "category": "Clinic",
+    "icon": "🩺",
+    "lat": 28.6454365,
+    "lon": 77.2251207,
+    "phone": "+91 11 3218206",
+    "source": "feed"
+  },
+  {
+    "name": "Krypton Global Health",
+    "address": "Guru Virjanand Marg",
+    "category": "Multispeciality",
+    "icon": "🏥",
+    "lat": 28.638646,
+    "lon": 77.0732307,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "Cloudnine Hospital",
+    "address": "Hoshiyarpur, Sector 51",
+    "category": "Multispeciality",
+    "icon": "🏥",
+    "lat": 28.5787478,
+    "lon": 77.3668926,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "awasthi hospital",
+    "address": "Delhi",
+    "category": "Multispeciality",
+    "icon": "🏥",
+    "lat": 28.6526314,
+    "lon": 77.3713857,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "INDIRA IVF",
+    "address": "Rohini East",
+    "category": "Clinic",
+    "icon": "🩺",
+    "lat": 28.7069436,
+    "lon": 77.1265177,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "Dr. Shweta Nihalani ( Dentist in Indirapuram)",
+    "address": "Dr. Sushila Naiyar Marg",
+    "category": "Clinic",
+    "icon": "🩺",
+    "lat": 28.6393065,
+    "lon": 77.3605586,
+    "phone": "9811397879",
+    "source": "feed"
+  },
+  {
+    "name": "Surbhi hospital",
+    "address": "Qutab Road",
+    "category": "Multispeciality",
+    "icon": "🏥",
+    "lat": 28.6491348,
+    "lon": 77.2164415,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "Tamish",
+    "address": "Sector 22",
+    "category": "Multispeciality",
+    "icon": "🏥",
+    "lat": 28.699593,
+    "lon": 77.1045409,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "Dr. Krishan Gola",
+    "address": "Delhi",
+    "category": "Clinic",
+    "icon": "🩺",
+    "lat": 28.6467122,
+    "lon": 77.212921,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "Metro Hospital and Heart Institute, Gurgaon",
+    "address": "Delhi",
+    "category": "Multispeciality",
+    "icon": "🏥",
+    "lat": 28.518174,
+    "lon": 77.0388234,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "Chandiwala Institute of Eye",
+    "address": "Delhi",
+    "category": "Multispeciality",
+    "icon": "🏥",
+    "lat": 28.544205,
+    "lon": 77.2659895,
+    "phone": "+91-11-4902-0242;+91-11-4902-0243;+91-11-4902-0244;+91-11-4902-0228",
+    "source": "feed"
+  },
+  {
+    "name": "Eye7 Chaudhary Eye Centre",
+    "address": "Doctor Sushila Naiyar Marg",
+    "category": "Multispeciality",
+    "icon": "🏥",
+    "lat": 28.6395242,
+    "lon": 77.373357,
+    "phone": "+91-97178-96108",
+    "source": "feed"
+  },
+  {
+    "name": "MODERN HOMEO HALL",
+    "address": "D K Road",
+    "category": "Clinic",
+    "icon": "🩺",
+    "lat": 28.6216001,
+    "lon": 77.0406957,
+    "phone": "8802377798",
+    "source": "feed"
+  },
+  {
+    "name": "Pushpawati Singhania Hospital and Research Institute",
+    "address": "Delhi",
+    "category": "Multispeciality",
+    "icon": "🏥",
+    "lat": 28.53312,
+    "lon": 77.2254277,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "Mittal Clinic & Eye Specialist",
+    "address": "Delhi",
+    "category": "Clinic",
+    "icon": "🩺",
+    "lat": 28.6849512,
+    "lon": 77.1295344,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "CRL diagnostics",
+    "address": "Delhi",
+    "category": "Clinic",
+    "icon": "🩺",
+    "lat": 28.6716634,
+    "lon": 77.1562194,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "Savera Hospital",
+    "address": "Delhi",
+    "category": "Multispeciality",
+    "icon": "🏥",
+    "lat": 28.6884962,
+    "lon": 77.1222079,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "Dr. Akash Juneja (ENT)",
+    "address": "Delhi",
+    "category": "Clinic",
+    "icon": "🩺",
+    "lat": 28.6883696,
+    "lon": 77.1217654,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "Health touch medicine",
+    "address": "Delhi",
+    "category": "Clinic",
+    "icon": "🩺",
+    "lat": 28.6884528,
+    "lon": 77.1221833,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "Gamca",
+    "address": "Cinema Road",
+    "category": "Multispeciality",
+    "icon": "🏥",
+    "lat": 28.5703187,
+    "lon": 77.2369366,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "Radha Krishna Medilink",
+    "address": "Delhi",
+    "category": "Clinic",
+    "icon": "🩺",
+    "lat": 28.692076,
+    "lon": 77.1157636,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "Patanjali store",
+    "address": "Delhi",
+    "category": "Clinic",
+    "icon": "🩺",
+    "lat": 28.6920814,
+    "lon": 77.1160257,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "Asha kiran mental hospital",
+    "address": "Delhi",
+    "category": "Multispeciality",
+    "icon": "🏥",
+    "lat": 28.7028126,
+    "lon": 77.0958863,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "Sharp Sight Center",
+    "address": "Vikas Marg",
+    "category": "Multispeciality",
+    "icon": "🏥",
+    "lat": 28.6403964,
+    "lon": 77.2934473,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "Rajora Niwas",
+    "address": "Mehrauli Badarpur Road",
+    "category": "Clinic",
+    "icon": "🩺",
+    "lat": 28.5129853,
+    "lon": 77.2355114,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "Dr Jain's Clinic",
+    "address": "C-20/A New Krishnapark",
+    "category": "Clinic",
+    "icon": "🩺",
+    "lat": 28.6306468,
+    "lon": 77.0764733,
+    "phone": "9811147070",
+    "source": "feed"
+  },
+  {
+    "name": "Dr S K Jain's Clinic",
+    "address": "New Krishna Park",
+    "category": "Clinic",
+    "icon": "🩺",
+    "lat": 28.6309047,
+    "lon": 77.0764877,
+    "phone": "9811147070",
+    "source": "feed"
+  },
+  {
+    "name": "Neo Multi Speciality Hospital",
+    "address": "D-170A, Sector 50, Noida",
+    "category": "Multispeciality",
+    "icon": "🏥",
+    "lat": 28.5697412,
+    "lon": 77.3702112,
+    "phone": "+91-120-4880000",
+    "source": "feed"
+  },
+  {
+    "name": "Bhagat Chandra Hospital",
+    "address": "Dabri Road",
+    "category": "Multispeciality",
+    "icon": "🏥",
+    "lat": 28.5934549,
+    "lon": 77.0816478,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "Adiva Hospital",
+    "address": "Delhi",
+    "category": "Multispeciality",
+    "icon": "🏥",
+    "lat": 28.5583994,
+    "lon": 77.2064208,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "Skin & Hair Care",
+    "address": "Delhi",
+    "category": "Clinic",
+    "icon": "🩺",
+    "lat": 28.5441982,
+    "lon": 77.2302898,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "Guru Harkishan Hospital",
+    "address": "Delhi",
+    "category": "Multispeciality",
+    "icon": "🏥",
+    "lat": 28.5821004,
+    "lon": 77.2641583,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "Lifespan Diabetes Clinics",
+    "address": "Delhi",
+    "category": "Clinic",
+    "icon": "🩺",
+    "lat": 28.6510976,
+    "lon": 77.2987351,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "Anju's Skin and Hair Beauty Clinic",
+    "address": "Delhi",
+    "category": "Clinic",
+    "icon": "🩺",
+    "lat": 28.5426418,
+    "lon": 77.2255189,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "Aradhya Clinic",
+    "address": "Delhi",
+    "category": "Clinic",
+    "icon": "🩺",
+    "lat": 28.6360093,
+    "lon": 77.3756869,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "Sir Ganga Ram Kolmet Hospital",
+    "address": "Delhi",
+    "category": "Multispeciality",
+    "icon": "🏥",
+    "lat": 28.643492,
+    "lon": 77.187296,
+    "phone": "1145099999",
+    "source": "feed"
+  },
+  {
+    "name": "Cygnus Orthocare Hospital",
+    "address": "Delhi",
+    "category": "Multispeciality",
+    "icon": "🏥",
+    "lat": 28.5460823,
+    "lon": 77.1973263,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "Rosewalk - Premium Birthing, Feminine care",
+    "address": "Delhi",
+    "category": "Multispeciality",
+    "icon": "🏥",
+    "lat": 28.5436294,
+    "lon": 77.2118358,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "Apollo Spectra Hospitals",
+    "address": "Delhi",
+    "category": "Multispeciality",
+    "icon": "🏥",
+    "lat": 28.5555937,
+    "lon": 77.2412436,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "Max Multi Speciality Centre",
+    "address": "Delhi",
+    "category": "Multispeciality",
+    "icon": "🏥",
+    "lat": 28.5434575,
+    "lon": 77.214298,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "Balhara's Le Cure Hospital",
+    "address": "Delhi",
+    "category": "Multispeciality",
+    "icon": "🏥",
+    "lat": 28.5097683,
+    "lon": 77.2014454,
+    "phone": "+91-011-3232-9996;+91-93109-40099",
+    "source": "feed"
+  },
+  {
+    "name": "Joshi Diabetes Centre",
+    "address": "Delhi",
+    "category": "Clinic",
+    "icon": "🩺",
+    "lat": 28.7055417,
+    "lon": 77.1112272,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "Mangalam Hospital",
+    "address": "Delhi",
+    "category": "Multispeciality",
+    "icon": "🏥",
+    "lat": 28.6228832,
+    "lon": 77.2966806,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "Fortis C-DOC Hospital",
+    "address": "Delhi",
+    "category": "Multispeciality",
+    "icon": "🏥",
+    "lat": 28.5469888,
+    "lon": 77.2494873,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "Channi Devi Goyal Memorial Medical Centre",
+    "address": "Delhi",
+    "category": "Clinic",
+    "icon": "🩺",
+    "lat": 28.7403173,
+    "lon": 77.1215558,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "Tirath Ram Hospital",
+    "address": "Delhi",
+    "category": "Multispeciality",
+    "icon": "🏥",
+    "lat": 28.666922,
+    "lon": 77.3178057,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "Doctor Rajendra Prasad Centre for Opthalmic Sciences",
+    "address": "Delhi",
+    "category": "Multispeciality",
+    "icon": "🏥",
+    "lat": 28.5667966,
+    "lon": 77.2088857,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "Safdarjung H back gate",
+    "address": "Delhi",
+    "category": "Multispeciality",
+    "icon": "🏥",
+    "lat": 28.5663672,
+    "lon": 77.207556,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "Aggarwal Eye Institute",
+    "address": "Delhi",
+    "category": "Clinic",
+    "icon": "🩺",
+    "lat": 28.5315336,
+    "lon": 77.2075678,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "ESIC Hospital",
+    "address": "Delhi",
+    "category": "Multispeciality",
+    "icon": "🏥",
+    "lat": 28.5143778,
+    "lon": 77.2815719,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "City Hospital",
+    "address": "Delhi",
+    "category": "Multispeciality",
+    "icon": "🏥",
+    "lat": 28.6439995,
+    "lon": 77.1912841,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "Rural Medical Centre",
+    "address": "Delhi",
+    "category": "Multispeciality",
+    "icon": "🏥",
+    "lat": 28.5158966,
+    "lon": 77.1965361,
+    "phone": "+91-11-2953-4031;+91-11-2953-6833",
+    "source": "feed"
+  },
+  {
+    "name": "Ahuja Clinic",
+    "address": "Delhi",
+    "category": "Clinic",
+    "icon": "🩺",
+    "lat": 28.5268841,
+    "lon": 77.2057017,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "Dr. Bhimrao Ambedkar Multispeciality Hospital",
+    "address": "Delhi",
+    "category": "Multispeciality",
+    "icon": "🏥",
+    "lat": 28.576653,
+    "lon": 77.3376879,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "Kohli Clinic",
+    "address": "Delhi",
+    "category": "Clinic",
+    "icon": "🩺",
+    "lat": 28.5332342,
+    "lon": 77.2210796,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "hi tech dental clinic",
+    "address": "Delhi",
+    "category": "Clinic",
+    "icon": "🩺",
+    "lat": 28.5357824,
+    "lon": 77.2168719,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "Sanjay clinic ",
+    "address": "Delhi",
+    "category": "Clinic",
+    "icon": "🩺",
+    "lat": 28.5341711,
+    "lon": 77.2220018,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "Tirupati eye center",
+    "address": "Delhi",
+    "category": "Clinic",
+    "icon": "🩺",
+    "lat": 28.5342543,
+    "lon": 77.2220757,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "care medical center",
+    "address": "Delhi",
+    "category": "Clinic",
+    "icon": "🩺",
+    "lat": 28.5346261,
+    "lon": 77.2206104,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "indraprastha poly clinic ",
+    "address": "Delhi",
+    "category": "Clinic",
+    "icon": "🩺",
+    "lat": 28.5341349,
+    "lon": 77.2194522,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "prakash dental care and physiotherapy",
+    "address": "Delhi",
+    "category": "Clinic",
+    "icon": "🩺",
+    "lat": 28.5328426,
+    "lon": 77.217287,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "Sparsh Homeopathic Clinic",
+    "address": "Delhi",
+    "category": "Clinic",
+    "icon": "🩺",
+    "lat": 28.5110272,
+    "lon": 77.2025214,
+    "phone": "+919711772920",
+    "source": "feed"
+  },
+  {
+    "name": "Institute of Brain and Spine",
+    "address": "Delhi",
+    "category": "Multispeciality",
+    "icon": "🏥",
+    "lat": 28.5656044,
+    "lon": 77.2442543,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "Anahat Hospital",
+    "address": "Delhi",
+    "category": "Multispeciality",
+    "icon": "🏥",
+    "lat": 28.4832404,
+    "lon": 77.1071305,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "Saral Diagnostics",
+    "address": "Maharishi Parshuram Marg",
+    "category": "Multispeciality",
+    "icon": "🏥",
+    "lat": 28.6944136,
+    "lon": 77.1287968,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "Dental Health Point",
+    "address": "Sector 6",
+    "category": "Clinic",
+    "icon": "🩺",
+    "lat": 28.7105191,
+    "lon": 77.1069394,
+    "phone": "+9101127054943",
+    "source": "feed"
+  },
+  {
+    "name": "Sama Hospital",
+    "address": "Siri Fort Road",
+    "category": "Multispeciality",
+    "icon": "🏥",
+    "lat": 28.5544846,
+    "lon": 77.2270262,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "JSMK Clinic",
+    "address": "Delhi",
+    "category": "Clinic",
+    "icon": "🩺",
+    "lat": 28.509637,
+    "lon": 77.1990545,
+    "phone": "+91-98914-85910",
+    "source": "feed"
+  },
+  {
+    "name": "Apollo",
+    "address": "Delhi",
+    "category": "Multispeciality",
+    "icon": "🏥",
+    "lat": 28.5403869,
+    "lon": 77.2829628,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "National Institute of TB and Respiratory Diseases",
+    "address": "Delhi",
+    "category": "Multispeciality",
+    "icon": "🏥",
+    "lat": 28.529118,
+    "lon": 77.1900425,
+    "phone": "1.13E+42",
+    "source": "feed"
+  },
+  {
+    "name": "Narang Hospital",
+    "address": "Delhi",
+    "category": "Multispeciality",
+    "icon": "🏥",
+    "lat": 28.6460854,
+    "lon": 77.0980297,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "Manchanda Hospital",
+    "address": "Delhi",
+    "category": "Multispeciality",
+    "icon": "🏥",
+    "lat": 28.4943675,
+    "lon": 77.1836992,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "Paschim Vihar West",
+    "address": "Rohtak Road",
+    "category": "Multispeciality",
+    "icon": "🏥",
+    "lat": 28.67852,
+    "lon": 77.0997686,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "World Brain Center Hospital",
+    "address": "Delhi",
+    "category": "Multispeciality",
+    "icon": "🏥",
+    "lat": 28.6121754,
+    "lon": 77.0886731,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "Max Medcentre",
+    "address": "Delhi",
+    "category": "Multispeciality",
+    "icon": "🏥",
+    "lat": 28.5645418,
+    "lon": 77.2399229,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "Mehta Hospital",
+    "address": "Delhi",
+    "category": "Multispeciality",
+    "icon": "🏥",
+    "lat": 28.523344,
+    "lon": 77.2312921,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "Prakash Hospital Pvt Ltd",
+    "address": "Ghaziabad",
+    "category": "Multispeciality",
+    "icon": "🏥",
+    "lat": 28.5854878,
+    "lon": 77.3494026,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "Sumitra Hospital",
+    "address": "Ghaziabad",
+    "category": "Multispeciality",
+    "icon": "🏥",
+    "lat": 28.5818659,
+    "lon": 77.3529095,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "Kailash Hospital & Heart Institute",
+    "address": "Sector 27",
+    "category": "Multispeciality",
+    "icon": "🏥",
+    "lat": 28.577404,
+    "lon": 77.3314139,
+    "phone": "0120 244 4444",
+    "source": "feed"
+  },
+  {
+    "name": "Ram Lal Kundan Lal Orthopaedic Hospital",
+    "address": "Pandav Nagar, New Delhi",
+    "category": "Multispeciality",
+    "icon": "🏥",
+    "lat": 28.6179569,
+    "lon": 77.2866841,
+    "phone": "+91 11 4318 9000;+91 11 4318 9099",
+    "source": "feed"
+  },
+  {
+    "name": "Dr. Shyama Prasad Mukherjee Chest Hospital",
+    "address": "Ghaziabad",
+    "category": "Multispeciality",
+    "icon": "🏥",
+    "lat": 28.6140205,
+    "lon": 77.2898985,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "Yashoda Super Speciality Hospital, Anand Vihar",
+    "address": "Ghaziabad",
+    "category": "Multispeciality",
+    "icon": "🏥",
+    "lat": 28.6450931,
+    "lon": 77.3287535,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "Shanti Gopal Hospital",
+    "address": "Ghaziabad",
+    "category": "Multispeciality",
+    "icon": "🏥",
+    "lat": 28.6418223,
+    "lon": 77.3792669,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "NMC Hospital",
+    "address": "Ghaziabad",
+    "category": "Multispeciality",
+    "icon": "🏥",
+    "lat": 28.5729253,
+    "lon": 77.3402993,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "Bhardwaj Hospital",
+    "address": "Ghaziabad",
+    "category": "Multispeciality",
+    "icon": "🏥",
+    "lat": 28.5660388,
+    "lon": 77.3355783,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "Ojjus Hospital",
+    "address": "Ghaziabad",
+    "category": "Multispeciality",
+    "icon": "🏥",
+    "lat": 28.5654904,
+    "lon": 77.3595236,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "Somdatt Medical",
+    "address": "Ghaziabad",
+    "category": "Multispeciality",
+    "icon": "🏥",
+    "lat": 28.6293605,
+    "lon": 77.276622,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "Cloudnine Hospital",
+    "address": "Hoshiyarpur, Sector 51",
+    "category": "Multispeciality",
+    "icon": "🏥",
+    "lat": 28.5787478,
+    "lon": 77.3668926,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "awasthi hospital",
+    "address": "Ghaziabad",
+    "category": "Multispeciality",
+    "icon": "🏥",
+    "lat": 28.6526314,
+    "lon": 77.3713857,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "Dr. Shweta Nihalani ( Dentist in Indirapuram)",
+    "address": "Dr. Sushila Naiyar Marg",
+    "category": "Clinic",
+    "icon": "🩺",
+    "lat": 28.6393065,
+    "lon": 77.3605586,
+    "phone": "9811397879",
+    "source": "feed"
+  },
+  {
+    "name": "Dr. Achal Swami",
+    "address": "Ghaziabad",
+    "category": "Clinic",
+    "icon": "🩺",
+    "lat": 28.6723029,
+    "lon": 77.4336922,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "Eye7 Chaudhary Eye Centre",
+    "address": "Doctor Sushila Naiyar Marg",
+    "category": "Multispeciality",
+    "icon": "🏥",
+    "lat": 28.6395242,
+    "lon": 77.373357,
+    "phone": "+91-97178-96108",
+    "source": "feed"
+  },
+  {
+    "name": "Sharp Sight Center",
+    "address": "Vikas Marg",
+    "category": "Multispeciality",
+    "icon": "🏥",
+    "lat": 28.6403964,
+    "lon": 77.2934473,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "Neo Multi Speciality Hospital",
+    "address": "D-170A, Sector 50, Noida",
+    "category": "Multispeciality",
+    "icon": "🏥",
+    "lat": 28.5697412,
+    "lon": 77.3702112,
+    "phone": "+91-120-4880000",
+    "source": "feed"
+  },
+  {
+    "name": "Vardan Multi Speciality Hospital",
+    "address": "Ghaziabad",
+    "category": "Multispeciality",
+    "icon": "🏥",
+    "lat": 28.7068603,
+    "lon": 77.4452126,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "Lifespan Diabetes Clinics",
+    "address": "Ghaziabad",
+    "category": "Clinic",
+    "icon": "🩺",
+    "lat": 28.6510976,
+    "lon": 77.2987351,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "Aradhya Clinic",
+    "address": "Ghaziabad",
+    "category": "Clinic",
+    "icon": "🩺",
+    "lat": 28.6360093,
+    "lon": 77.3756869,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "Mangalam Hospital",
+    "address": "Ghaziabad",
+    "category": "Multispeciality",
+    "icon": "🏥",
+    "lat": 28.6228832,
+    "lon": 77.2966806,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "Tirath Ram Hospital",
+    "address": "Ghaziabad",
+    "category": "Multispeciality",
+    "icon": "🏥",
+    "lat": 28.666922,
+    "lon": 77.3178057,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "Dr. Bhimrao Ambedkar Multispeciality Hospital",
+    "address": "Ghaziabad",
+    "category": "Multispeciality",
+    "icon": "🏥",
+    "lat": 28.576653,
+    "lon": 77.3376879,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "Dr Fateh Singh Hospital",
+    "address": "Ghaziabad",
+    "category": "Multispeciality",
+    "icon": "🏥",
+    "lat": 28.6471512,
+    "lon": 77.3412971,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "Sakshi Medicare",
+    "address": "Ghaziabad",
+    "category": "Multispeciality",
+    "icon": "🏥",
+    "lat": 28.6863918,
+    "lon": 77.4169093,
+    "phone": "4238910",
+    "source": "feed"
+  },
+  {
+    "name": "Mavi Nursing Home",
+    "address": "Ghaziabad",
+    "category": "Clinic",
+    "icon": "🩺",
+    "lat": 28.7259864,
+    "lon": 77.2881059,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "Chandra Laxmi Hospital, Maliwara Chowk",
+    "address": "Ghaziabad",
+    "category": "Multispeciality",
+    "icon": "🏥",
+    "lat": 28.666936,
+    "lon": 77.4325258,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "Shree Krishna Hospital, Ghaziabad",
+    "address": "Ghaziabad",
+    "category": "Multispeciality",
+    "icon": "🏥",
+    "lat": 28.6520842,
+    "lon": 77.3603535,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "Navjeevan Nursing Home, Shastri Nagar",
+    "address": "Ghaziabad",
+    "category": "Clinic",
+    "icon": "🩺",
+    "lat": 28.6763705,
+    "lon": 77.4736266,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "Lokpriya Hospital, Ghaziabad",
+    "address": "Ghaziabad",
+    "category": "Multispeciality",
+    "icon": "🏥",
+    "lat": 28.6675714,
+    "lon": 77.4346152,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "Tanvi Clinic And Diagnostic",
+    "address": "Ghaziabad",
+    "category": "Clinic",
+    "icon": "🩺",
+    "lat": 28.541767,
+    "lon": 77.3876511,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "Sood Nursing Home, Ghaziabad",
+    "address": "Ghaziabad",
+    "category": "Clinic",
+    "icon": "🩺",
+    "lat": 28.665804,
+    "lon": 77.437638,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "Jai Nursing Home",
+    "address": "Ghaziabad",
+    "category": "Clinic",
+    "icon": "🩺",
+    "lat": 28.6779906,
+    "lon": 77.4211961,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "Param Jyoti Eye Center",
+    "address": "Ghaziabad",
+    "category": "Multispeciality",
+    "icon": "🏥",
+    "lat": 28.6574453,
+    "lon": 77.3587207,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "Meha Maternity and Pain Clinic",
+    "address": "Ghaziabad",
+    "category": "Clinic",
+    "icon": "🩺",
+    "lat": 28.6763916,
+    "lon": 77.4200581,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "Vardhman Medicare",
+    "address": "Ghaziabad",
+    "category": "Multispeciality",
+    "icon": "🏥",
+    "lat": 28.6627578,
+    "lon": 77.442312,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "Bhagwati Upchaar Kendra",
+    "address": "Ghaziabad",
+    "category": "Clinic",
+    "icon": "🩺",
+    "lat": 28.670379,
+    "lon": 77.4291381,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "Dr. Ranjan's Gynae and Eye Clinic",
+    "address": "Ghaziabad",
+    "category": "Clinic",
+    "icon": "🩺",
+    "lat": 28.6371608,
+    "lon": 77.3356269,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "Vardan Eye Hospital, Ghaziabad",
+    "address": "Ghaziabad",
+    "category": "Multispeciality",
+    "icon": "🏥",
+    "lat": 28.6865836,
+    "lon": 77.4460183,
+    "phone": "2752440",
+    "source": "feed"
+  },
+  {
+    "name": "Holy Cross Hospital, Ghaziabad",
+    "address": "Ghaziabad",
+    "category": "Multispeciality",
+    "icon": "🏥",
+    "lat": 28.6885725,
+    "lon": 77.5530255,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "Rama Hospital",
+    "address": "Ghaziabad",
+    "category": "Multispeciality",
+    "icon": "🏥",
+    "lat": 28.6938605,
+    "lon": 77.6086771,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "Rama Medical College Hospital and Research centre, Ghaziabad",
+    "address": "Ghaziabad",
+    "category": "Multispeciality",
+    "icon": "🏥",
+    "lat": 28.6981002,
+    "lon": 77.6077183,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "Krishna Hospital and Trauma Centre",
+    "address": "Ghaziabad",
+    "category": "Multispeciality",
+    "icon": "🏥",
+    "lat": 28.6703284,
+    "lon": 77.4289886,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "Avantika Hospital",
+    "address": "Ghaziabad",
+    "category": "Multispeciality",
+    "icon": "🏥",
+    "lat": 28.6455529,
+    "lon": 77.3717563,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "Pragya Clinic, Gautam Buddha Nagar",
+    "address": "Ghaziabad",
+    "category": "Clinic",
+    "icon": "🩺",
+    "lat": 28.5636424,
+    "lon": 77.3587422,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "Apex Multi Speciality Hospital",
+    "address": "Ghaziabad",
+    "category": "Multispeciality",
+    "icon": "🏥",
+    "lat": 28.6678491,
+    "lon": 77.4638459,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "Manipal hospital",
+    "address": "Ghaziabad",
+    "category": "Multispeciality",
+    "icon": "🏥",
+    "lat": 28.6551434,
+    "lon": 77.4724531,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "Mittal Hospital and Diagnostic Centre",
+    "address": "Ghaziabad",
+    "category": "Multispeciality",
+    "icon": "🏥",
+    "lat": 28.6701642,
+    "lon": 77.4282107,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "Mithlesh Nursing Home",
+    "address": "Ghaziabad",
+    "category": "Clinic",
+    "icon": "🩺",
+    "lat": 28.6526097,
+    "lon": 77.4365316,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "Shiv Krishna Hospital",
+    "address": "Ghaziabad",
+    "category": "Multispeciality",
+    "icon": "🏥",
+    "lat": 28.6861947,
+    "lon": 77.3702958,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "I T S Hospital",
+    "address": "Ghaziabad",
+    "category": "Multispeciality",
+    "icon": "🏥",
+    "lat": 28.7524589,
+    "lon": 77.4956381,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "Tyagi Nursing Home",
+    "address": "Ghaziabad",
+    "category": "Clinic",
+    "icon": "🩺",
+    "lat": 28.6809262,
+    "lon": 77.4412268,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "Yatharth Hospital, Gautam Buddha Nagar",
+    "address": "Ghaziabad",
+    "category": "Multispeciality",
+    "icon": "🏥",
+    "lat": 28.5321788,
+    "lon": 77.384381,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "CGHS Dispensary, Kamla Nehru Nagar",
+    "address": "Ghaziabad",
+    "category": "Clinic",
+    "icon": "🩺",
+    "lat": 28.6805831,
+    "lon": 77.4634999,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "Government District Hospital, Gautam Buddha Nagar",
+    "address": "Ghaziabad",
+    "category": "Multispeciality",
+    "icon": "🏥",
+    "lat": 28.5770068,
+    "lon": 77.3394731,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "Sohan Nursing Home and Maternity Centre",
+    "address": "Ghaziabad",
+    "category": "Clinic",
+    "icon": "🩺",
+    "lat": 28.6816651,
+    "lon": 77.4918348,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "Heera Lal Hospital and Heart Care Centre",
+    "address": "Ghaziabad",
+    "category": "Multispeciality",
+    "icon": "🏥",
+    "lat": 28.6745067,
+    "lon": 77.4617296,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "Dhama Clinic",
+    "address": "Ghaziabad",
+    "category": "Clinic",
+    "icon": "🩺",
+    "lat": 28.5811477,
+    "lon": 77.363074,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "Prem Dharam Hospital and Diagnostics",
+    "address": "Ghaziabad",
+    "category": "Multispeciality",
+    "icon": "🏥",
+    "lat": 28.6600937,
+    "lon": 77.367961,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "Ganesh Hospital, Ghaziabad",
+    "address": "Ghaziabad",
+    "category": "Multispeciality",
+    "icon": "🏥",
+    "lat": 28.6623575,
+    "lon": 77.439385,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "Jain Hospital and Research Centre",
+    "address": "Ghaziabad",
+    "category": "Multispeciality",
+    "icon": "🏥",
+    "lat": 28.661683,
+    "lon": 77.360141,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "Jain Clinic",
+    "address": "Ghaziabad",
+    "category": "Clinic",
+    "icon": "🩺",
+    "lat": 28.5928579,
+    "lon": 77.3389649,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "City Central Hospital",
+    "address": "Ghaziabad",
+    "category": "Multispeciality",
+    "icon": "🏥",
+    "lat": 28.6603055,
+    "lon": 77.4269811,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "Prime Hospital",
+    "address": "Ghaziabad",
+    "category": "Multispeciality",
+    "icon": "🏥",
+    "lat": 28.6740831,
+    "lon": 77.4664289,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "Gopal Hospital",
+    "address": "Ghaziabad",
+    "category": "Multispeciality",
+    "icon": "🏥",
+    "lat": 28.7258364,
+    "lon": 77.2893602,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "Krishna Family Hospital and Infertility Center",
+    "address": "Ghaziabad",
+    "category": "Multispeciality",
+    "icon": "🏥",
+    "lat": 28.6537077,
+    "lon": 77.411115,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "Aasha Deep Hospital",
+    "address": "Ghaziabad",
+    "category": "Multispeciality",
+    "icon": "🏥",
+    "lat": 28.6875033,
+    "lon": 77.3394397,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "Bhagwati Nursing Home (Pvt) Ltd.",
+    "address": "Ghaziabad",
+    "category": "Clinic",
+    "icon": "🩺",
+    "lat": 28.5472384,
+    "lon": 77.5458232,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "Dr. Rani Ghai Hospital Pvt. Ltd.",
+    "address": "Ghaziabad",
+    "category": "Multispeciality",
+    "icon": "🏥",
+    "lat": 28.6439075,
+    "lon": 77.4272177,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "R.N. Hospital",
+    "address": "Ghaziabad",
+    "category": "Multispeciality",
+    "icon": "🏥",
+    "lat": 28.6141769,
+    "lon": 77.3522092,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "Shivalik Hospital, Ghaziabad",
+    "address": "Ghaziabad",
+    "category": "Multispeciality",
+    "icon": "🏥",
+    "lat": 28.6796341,
+    "lon": 77.4911327,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "S.S. Medicare Centre",
+    "address": "Ghaziabad",
+    "category": "Multispeciality",
+    "icon": "🏥",
+    "lat": 28.6661429,
+    "lon": 77.3310229,
+    "phone": "2622923",
+    "source": "feed"
+  },
+  {
+    "name": "Kailash Medicare and Research Center",
+    "address": "Ghaziabad",
+    "category": "Multispeciality",
+    "icon": "🏥",
+    "lat": 28.6912702,
+    "lon": 77.4367192,
+    "phone": "0120 2706124",
+    "source": "feed"
+  },
+  {
+    "name": "Shiv Clinic, Gautam Buddha Nagar",
+    "address": "Ghaziabad",
+    "category": "Clinic",
+    "icon": "🩺",
+    "lat": 28.5434748,
+    "lon": 77.3853469,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "Kalawati Memorial Clinic",
+    "address": "Ghaziabad",
+    "category": "Clinic",
+    "icon": "🩺",
+    "lat": 28.6374372,
+    "lon": 77.3532185,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "Vardaan Nursing and Maternity Home",
+    "address": "Ghaziabad",
+    "category": "Clinic",
+    "icon": "🩺",
+    "lat": 28.6695412,
+    "lon": 77.4570747,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "Aarogya Hospital, Ghaziabad",
+    "address": "Ghaziabad",
+    "category": "Multispeciality",
+    "icon": "🏥",
+    "lat": 28.6481363,
+    "lon": 77.3516937,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "Sanjivani Maternity and Nursing Home Pvt Ltd",
+    "address": "Ghaziabad",
+    "category": "Clinic",
+    "icon": "🩺",
+    "lat": 28.6756803,
+    "lon": 77.3698917,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "Pannalal Shyamlal Hospital",
+    "address": "Ghaziabad",
+    "category": "Multispeciality",
+    "icon": "🏥",
+    "lat": 28.6633309,
+    "lon": 77.4351072,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "Pulmonic Hospital",
+    "address": "Ghaziabad",
+    "category": "Multispeciality",
+    "icon": "🏥",
+    "lat": 28.6865262,
+    "lon": 77.450742,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "Icare Eye Hospital And Post Graduate Institute Glaucoma Research Centre",
+    "address": "Ghaziabad",
+    "category": "Multispeciality",
+    "icon": "🏥",
+    "lat": 28.5799524,
+    "lon": 77.3355089,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "Sharnam Eye Centre and Laser Services",
+    "address": "Ghaziabad",
+    "category": "Multispeciality",
+    "icon": "🏥",
+    "lat": 28.6805275,
+    "lon": 77.4530001,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "Navin Hospital, Dadri",
+    "address": "Ghaziabad",
+    "category": "Multispeciality",
+    "icon": "🏥",
+    "lat": 28.5498211,
+    "lon": 77.5499871,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "R K Medicare",
+    "address": "Ghaziabad",
+    "category": "Multispeciality",
+    "icon": "🏥",
+    "lat": 28.6267789,
+    "lon": 77.3483944,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "Durga Hospital",
+    "address": "Ghaziabad",
+    "category": "Multispeciality",
+    "icon": "🏥",
+    "lat": 28.5468729,
+    "lon": 77.5461331,
+    "phone": "2665563",
+    "source": "feed"
+  },
+  {
+    "name": "Life Care Hospital, Gautam Buddha Nagar",
+    "address": "Ghaziabad",
+    "category": "Multispeciality",
+    "icon": "🏥",
+    "lat": 28.5935471,
+    "lon": 77.3701425,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "Tirupati Eye Center",
+    "address": "Ghaziabad",
+    "category": "Multispeciality",
+    "icon": "🏥",
+    "lat": 28.5874352,
+    "lon": 77.3570766,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "Getwell physiotherapy center",
+    "address": "Ghaziabad",
+    "category": "Multispeciality",
+    "icon": "🏥",
+    "lat": 28.6921759,
+    "lon": 77.3416096,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "Om Arpan Nursing Home",
+    "address": "Ghaziabad",
+    "category": "Clinic",
+    "icon": "🩺",
+    "lat": 28.6142729,
+    "lon": 77.3522647,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "Sparsh Multispeciality Hospital",
+    "address": "Ghaziabad",
+    "category": "Multispeciality",
+    "icon": "🏥",
+    "lat": 28.6927335,
+    "lon": 77.3397857,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "Meenakshi Hospital, Ghaziabad",
+    "address": "Ghaziabad",
+    "category": "Multispeciality",
+    "icon": "🏥",
+    "lat": 28.642142,
+    "lon": 77.3257148,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "Sangal Eye Clinic",
+    "address": "Ghaziabad",
+    "category": "Clinic",
+    "icon": "🩺",
+    "lat": 28.5732523,
+    "lon": 77.3218819,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "Rizvi Surgical Centre",
+    "address": "Ghaziabad",
+    "category": "Multispeciality",
+    "icon": "🏥",
+    "lat": 28.6724376,
+    "lon": 77.4490426,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "Sumitra Nursing Home, Gautam Buddha Nagar",
+    "address": "Ghaziabad",
+    "category": "Clinic",
+    "icon": "🩺",
+    "lat": 28.5809728,
+    "lon": 77.3534455,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "Family Medicare",
+    "address": "Ghaziabad",
+    "category": "Clinic",
+    "icon": "🩺",
+    "lat": 28.6013748,
+    "lon": 77.3783062,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "Amar Medical Centre",
+    "address": "Ghaziabad",
+    "category": "Clinic",
+    "icon": "🩺",
+    "lat": 28.5787282,
+    "lon": 77.3245709,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "Sahibabad Medicare Centre",
+    "address": "Ghaziabad",
+    "category": "Multispeciality",
+    "icon": "🏥",
+    "lat": 28.6783954,
+    "lon": 77.3657387,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "Garims Nursing Home Pvt Ltd",
+    "address": "Ghaziabad",
+    "category": "Clinic",
+    "icon": "🩺",
+    "lat": 28.5799765,
+    "lon": 77.3421802,
+    "phone": "",
+    "source": "feed"
+  },
+  {
+    "name": "New Vision Eye and Medical Care",
+    "address": "Ghaziabad",
+    "category": "Multispeciality",
+    "icon": "🏥",
+    "lat": 28.6837476,
+    "lon": 77.3551735,
+    "phone": "",
+    "source": "feed"
+  }
+]

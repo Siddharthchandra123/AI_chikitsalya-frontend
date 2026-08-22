@@ -1,0 +1,42 @@
+{
+  "model_type": "LogisticRegression",
+  "version": "0.1-demo",
+  "features": [
+    "fever",
+    "cough",
+    "headache",
+    "fatigue",
+    "bodyache",
+    "breathing",
+    "nausea",
+    "sorethroat",
+    "runny_nose",
+    "sneezing",
+    "vomiting",
+    "diarrhea",
+    "abdominal_pain",
+    "chest_pain",
+    "dizziness",
+    "rash",
+    "joint_pain",
+    "loss_of_smell",
+    "loss_of_taste",
+    "urinary_burning"
+  ],
+  "classes": [
+    "Allergic rhinitis",
+    "Asthma-like symptoms",
+    "Bronchitis-like illness",
+    "COVID-19-like illness",
+    "Common cold",
+    "Gastroenteritis",
+    "Influenza-like illness",
+    "Migraine-like illness",
+    "Musculoskeletal pain",
+    "Respiratory infection-like illness",
+    "Urinary tract infection-like illness",
+    "Viral rash illness"
+  ],
+  "clinical_validation": false,
+  "training_note": "Deterministic synthetic prototype fixture for software demonstration; not medical ground truth."
+}
