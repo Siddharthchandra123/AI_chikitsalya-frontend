@@ -1,61 +1,104 @@
 """
-AI CHIKITSALYA - FastAPI Backend
-Production-oriented FastAPI/Uvicorn API.
+============================================================
+AI CHIKITSALYA
+Hybrid Edge AI + Cloud Medical Intelligence
+Single-file FastAPI Backend
+============================================================
 
-Key deployment behavior:
-- Binds to Render's $PORT.
-- /health and /status remain lightweight.
-- medical_ai is loaded in the background.
-- /predict waits for background initialization instead of returning
-  503 immediately while the model is loading.
-- Heavy ML/RAG imports are kept out of module import time.
+Architecture:
+
+                USER
+                  |
+                  v
+          +---------------+
+          |   FastAPI     |
+          +-------+-------+
+                  |
+          +-------v-------+
+          | Symptom NLP   |
+          +-------+-------+
+                  |
+          +-------v-------+
+          | Safety Engine |
+          +-------+-------+
+                  |
+          +-------v-------+
+          | Edge ML Model |
+          | Random Forest |
+          +-------+-------+
+                  |
+             Preliminary
+              Assessment
+                  |
+           +------+------+
+           |             |
+        Offline       Online
+           |             |
+           |       Cloud Enhancement
+           |             |
+           |       +-----v------+
+           |       | FAISS/RAG  |
+           |       +-----+------+
+           |             |
+           |       Medical Context
+           |             |
+           +------+------+
+                  |
+                  v
+             Final Result
+
+IMPORTANT:
+- Edge AI is always available when the disease model is available.
+- Cloud/RAG is lazy-loaded.
+- RAG failure must never break /predict.
+============================================================
 """
 
-from __future__ import annotations
-
-import asyncio
-import importlib
-import logging
 import os
-import time
-from typing import Any, Dict, List, Optional
+import re
+import json
+import logging
+import traceback
+from pathlib import Path
+from typing import Optional, List, Dict, Any
 
-from fastapi import FastAPI, File, HTTPException, UploadFile
+import numpy as np
+
+from fastapi import (
+    FastAPI,
+    HTTPException,
+    UploadFile,
+    File,
+)
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 
+# ------------------------------------------------------------
+# Optional ML imports
+# ------------------------------------------------------------
 
-# ============================================================
-# CONFIG
-# ============================================================
+try:
+    import joblib
+except Exception:
+    joblib = None
 
-APP_NAME = "AI Chikitsalya API"
-APP_VERSION = "2.1.0"
+# ------------------------------------------------------------
+# Optional FAISS
+# ------------------------------------------------------------
 
-HOST = "0.0.0.0"
-PORT = int(os.getenv("PORT", "5000"))
-LOG_LEVEL = os.getenv("LOG_LEVEL", "INFO").upper()
+faiss = None
 
-FRONTEND_URL = os.getenv(
-    "FRONTEND_URL",
-    "http://localhost:3000",
-).strip().rstrip("/")
+# ------------------------------------------------------------
+# Optional sentence-transformers
+# ------------------------------------------------------------
 
-ALLOWED_ORIGINS = [
-    "http://127.0.0.1:3000",
-    "http://localhost:3000",
+SentenceTransformer = None
 
-    # Production domain
-    "https://ai-chikitsalya.co.in",
-    "https://www.ai-chikitsalya.co.in",
+# ------------------------------------------------------------
+# Optional torch
+# ------------------------------------------------------------
 
-    # Render frontend
-    "https://ai-chikitsalya-frontend.onrender.com",
-]
-
-ENGINE_MAX_WAIT_SECONDS = int(
-    os.getenv("ENGINE_MAX_WAIT_SECONDS", "180")
-)
+torch = None
 
 
 # ============================================================
@@ -63,11 +106,142 @@ ENGINE_MAX_WAIT_SECONDS = int(
 # ============================================================
 
 logging.basicConfig(
-    level=getattr(logging, LOG_LEVEL, logging.INFO),
-    format="%(asctime)s | %(levelname)s | %(name)s | %(message)s",
+    level=os.getenv("LOG_LEVEL", "INFO"),
+    format=(
+        "%(asctime)s | %(levelname)s | "
+        "%(name)s | %(message)s"
+    ),
 )
 
 logger = logging.getLogger("AI-Chikitsalya-API")
+
+
+# ============================================================
+# PATHS
+# ============================================================
+
+BASE_DIR = Path(__file__).resolve().parent
+
+DATA_DIR = BASE_DIR / "data"
+MODEL_DIR = BASE_DIR / "models"
+RAG_DIR = BASE_DIR / "rag"
+
+# Support your current flat structure as fallback
+DATA_DIR_ALT = BASE_DIR
+MODEL_DIR_ALT = BASE_DIR
+
+
+def find_file(
+    filename: str,
+    *directories: Path,
+) -> Optional[Path]:
+
+    for directory in directories:
+
+        path = directory / filename
+
+        if path.exists():
+            return path
+
+    return None
+
+
+# ============================================================
+# ENVIRONMENT
+# ============================================================
+
+PORT = int(
+    os.getenv("PORT", "10000")
+)
+
+ENABLE_CLOUD = (
+    os.getenv(
+        "ENABLE_CLOUD",
+        "true"
+    ).lower()
+    == "true"
+)
+
+ENABLE_RAG = (
+    os.getenv(
+        "ENABLE_RAG",
+        "false"
+    ).lower()
+    == "true"
+)
+
+RAG_TOP_K = int(
+    os.getenv(
+        "RAG_TOP_K",
+        "4"
+    )
+)
+
+MODEL_PATH = find_file(
+    "disease_model.pkl",
+    MODEL_DIR,
+    MODEL_DIR_ALT,
+)
+
+FEATURE_PATH = find_file(
+    "feature_columns.pkl",
+    MODEL_DIR,
+    MODEL_DIR_ALT,
+)
+
+DATASET_PATH = find_file(
+    "dataset.csv",
+    DATA_DIR,
+    DATA_DIR_ALT,
+)
+
+DESCRIPTION_PATH = find_file(
+    "symptom_Description.csv",
+    DATA_DIR,
+    DATA_DIR_ALT,
+)
+
+PRECAUTION_PATH = find_file(
+    "symptom_precaution.csv",
+    DATA_DIR,
+    DATA_DIR_ALT,
+)
+
+SEVERITY_PATH = find_file(
+    "Symptom-severity.csv",
+    DATA_DIR,
+    DATA_DIR_ALT,
+)
+
+FAISS_PATH = find_file(
+    "rag_index.faiss",
+    RAG_DIR,
+    BASE_DIR,
+)
+
+# ============================================================
+# CORS
+# ============================================================
+
+ALLOWED_ORIGINS = [
+    "http://127.0.0.1:3000",
+    "http://localhost:3000",
+
+    "https://ai-chikitsalya.co.in",
+    "https://www.ai-chikitsalya.co.in",
+
+    "https://ai-chikitsalya-frontend.onrender.com",
+]
+
+# Allow custom frontend origin through environment variable
+extra_origin = os.getenv(
+    "FRONTEND_URL"
+)
+
+if extra_origin:
+    ALLOWED_ORIGINS.append(
+        extra_origin.rstrip("/")
+    )
 
 
 # ============================================================
@@ -75,13 +249,14 @@ logger = logging.getLogger("AI-Chikitsalya-API")
 # ============================================================
 
 app = FastAPI(
-    title=APP_NAME,
-    version=APP_VERSION,
+    title="AI Chikitsalya API",
     description=(
-        "AI-assisted health information and screening API "
-        "for AI Chikitsalya."
+        "Hybrid Edge AI + Cloud Medical "
+        "Decision Support API"
     ),
+    version="3.0.0",
 )
+
 
 app.add_middleware(
     CORSMiddleware,
@@ -93,21 +268,18 @@ app.add_middleware(
 
 
 # ============================================================
-# MEDICAL ENGINE STATE
+# GLOBAL ENGINE STATE
 # ============================================================
 
-_medical_engine: Optional[Any] = None
-_engine_error: Optional[str] = None
-_engine_loading: bool = False
-_engine_ready: bool = False
-_engine_started_at: Optional[float] = None
+disease_model = None
+feature_columns = []
 
-# This event is set when initialization finishes, successfully
-# or unsuccessfully.
-_engine_ready_event = asyncio.Event()
+engine_ready = False
+engine_error = None
 
-# Prevent multiple simultaneous initialization attempts.
-_engine_lock = asyncio.Lock()
+rag_engine = None
+rag_error = None
+rag_initialized = False
 
 
 # ============================================================
@@ -115,180 +287,924 @@ _engine_lock = asyncio.Lock()
 # ============================================================
 
 class PredictionRequest(BaseModel):
+
     query: str = Field(
         ...,
         min_length=1,
-        max_length=10000,
-    )
-    lang: str = Field(
-        default="en",
-        max_length=10,
+        max_length=5000,
     )
 
+    lang: str = "en"
 
-class TextRequest(BaseModel):
-    text: str = Field(
-        ...,
-        min_length=1,
-        max_length=10000,
+
+class EnhanceRequest(BaseModel):
+
+    condition: Optional[str] = None
+
+    query: str = ""
+
+    symptoms: List[str] = []
+
+    top_predictions: List[Dict[str, Any]] = []
+
+    lang: str = "en"
+
+
+# ============================================================
+# SYMPTOM ALIASES
+# ============================================================
+
+SYMPTOM_ALIASES = {
+
+    "fever": [
+        "fever",
+        "high fever",
+        "temperature",
+        "high temperature",
+    ],
+
+    "cough": [
+        "cough",
+        "coughing",
+    ],
+
+    "sore throat": [
+        "sore throat",
+        "throat pain",
+        "painful throat",
+        "throat irritation",
+    ],
+
+    "runny nose": [
+        "runny nose",
+        "running nose",
+        "nasal discharge",
+        "nose is running",
+    ],
+
+    "sneezing": [
+        "sneeze",
+        "sneezing",
+    ],
+
+    "vomiting": [
+        "vomiting",
+        "vomit",
+        "throwing up",
+        "threw up",
+    ],
+
+    "dizziness": [
+        "dizziness",
+        "dizzy",
+        "lightheaded",
+        "light headed",
+    ],
+
+    "headache": [
+        "headache",
+        "head pain",
+        "pain in head",
+    ],
+
+    "nausea": [
+        "nausea",
+        "feeling nauseous",
+        "feeling sick",
+    ],
+
+    "fatigue": [
+        "fatigue",
+        "tired",
+        "tiredness",
+        "weakness",
+        "feeling weak",
+    ],
+
+    "chest pain": [
+        "chest pain",
+        "pain in chest",
+        "chest discomfort",
+    ],
+
+    "breathing difficulty": [
+        "difficulty breathing",
+        "breathing difficulty",
+        "shortness of breath",
+        "breathlessness",
+        "hard to breathe",
+        "cannot breathe",
+    ],
+
+    "abdominal pain": [
+        "abdominal pain",
+        "stomach pain",
+        "belly pain",
+        "pain in stomach",
+    ],
+
+    "diarrhea": [
+        "diarrhea",
+        "loose motion",
+        "loose motions",
+        "loose stools",
+    ],
+
+    "constipation": [
+        "constipation",
+        "hard stool",
+        "difficulty passing stool",
+    ],
+
+    "back pain": [
+        "back pain",
+        "pain in back",
+    ],
+
+    "joint pain": [
+        "joint pain",
+        "painful joints",
+        "pain in joints",
+    ],
+
+    "muscle pain": [
+        "muscle pain",
+        "body pain",
+        "muscle ache",
+        "muscle aches",
+    ],
+
+    "skin rash": [
+        "skin rash",
+        "rash",
+        "skin eruption",
+    ],
+
+    "itching": [
+        "itching",
+        "itchy",
+    ],
+
+    "swelling": [
+        "swelling",
+        "swollen",
+    ],
+
+    "loss of appetite": [
+        "loss of appetite",
+        "no appetite",
+        "not hungry",
+    ],
+
+    "chills": [
+        "chills",
+        "shivering",
+    ],
+
+    "sweating": [
+        "sweating",
+        "excessive sweating",
+    ],
+
+    "eye pain": [
+        "eye pain",
+        "pain in eyes",
+    ],
+
+    "red eyes": [
+        "red eyes",
+        "reddish eyes",
+    ],
+
+    "blurred vision": [
+        "blurred vision",
+        "blurry vision",
+    ],
+}
+
+
+# ============================================================
+# TEXT NORMALIZATION
+# ============================================================
+
+def normalize_text(text: str) -> str:
+
+    if not text:
+        return ""
+
+    text = text.lower()
+
+    text = re.sub(
+        r"symptoms?\s*:",
+        " ",
+        text,
+        flags=re.IGNORECASE,
+    )
+
+    text = re.sub(
+        r"[^a-z0-9\s]",
+        " ",
+        text,
+    )
+
+    text = re.sub(
+        r"\s+",
+        " ",
+        text,
+    )
+
+    return text.strip()
+
+
+# ============================================================
+# SYMPTOM EXTRACTION
+# ============================================================
+
+def extract_symptoms(text: str) -> List[str]:
+
+    normalized = normalize_text(text)
+
+    found = []
+
+    for canonical, aliases in SYMPTOM_ALIASES.items():
+
+        for alias in aliases:
+
+            alias_normalized = normalize_text(
+                alias
+            )
+
+            if (
+                alias_normalized
+                and alias_normalized in normalized
+            ):
+                found.append(canonical)
+                break
+
+    return list(
+        dict.fromkeys(found)
     )
 
 
 # ============================================================
-# CONSTANTS
+# MODEL FEATURE MATCHING
 # ============================================================
 
-DISCLAIMER = (
-    "AI Chikitsalya provides health information and decision "
-    "support. It does not replace a qualified medical professional "
-    "or provide a confirmed diagnosis."
-)
+def match_symptoms_to_model_features(
+    symptoms: List[str],
+) -> List[str]:
 
+    if not feature_columns:
+        return []
 
-# ============================================================
-# MEDICAL ENGINE LOADING
-# ============================================================
+    normalized_features = {}
 
-def _import_medical_engine_sync():
-    """
-    Synchronous import executed in a worker thread.
+    for feature in feature_columns:
 
-    medical_ai.py may load:
-    - Random Forest
-    - FAISS
-    - SentenceTransformer
-    - RAG resources
-    - datasets
-    - other ML assets
-
-    Keeping this outside the Uvicorn event loop prevents heavy
-    initialization from blocking the HTTP server.
-    """
-    return importlib.import_module("medical_ai")
-
-
-async def initialize_medical_engine():
-    """
-    Initialize the medical engine exactly once.
-
-    Important:
-    Do NOT set _engine_loading=True and then return None to callers.
-    Callers should wait for this initialization to finish.
-    """
-    global _medical_engine
-    global _engine_error
-    global _engine_loading
-    global _engine_ready
-    global _engine_started_at
-
-    if _medical_engine is not None:
-        return _medical_engine
-
-    async with _engine_lock:
-
-        # Another coroutine may have completed initialization
-        # while we were waiting for the lock.
-        if _medical_engine is not None:
-            return _medical_engine
-
-        if _engine_loading:
-            return None
-
-        _engine_loading = True
-        _engine_ready_event.clear()
-        _engine_started_at = time.time()
-        _engine_error = None
-
-        logger.info("==============================================")
-        logger.info("Loading AI Chikitsalya medical engine...")
-        logger.info("Importing medical_ai.py")
-        logger.info("==============================================")
-
-        try:
-            engine = await asyncio.to_thread(
-                _import_medical_engine_sync
-            )
-
-            _medical_engine = engine
-            _engine_ready = True
-            _engine_error = None
-
-            elapsed = time.time() - _engine_started_at
-
-            logger.info(
-                "Medical engine loaded successfully in %.2f seconds.",
-                elapsed,
-            )
-            logger.info("AI CHIKITSALYA MEDICAL ENGINE READY")
-
-            return _medical_engine
-
-        except Exception as exc:
-            _medical_engine = None
-            _engine_ready = False
-            _engine_error = (
-                f"{type(exc).__name__}: {exc}"
-            )
-
-            logger.exception(
-                "Medical engine initialization failed."
-            )
-
-            return None
-
-        finally:
-            _engine_loading = False
-            _engine_ready_event.set()
-
-
-async def preload_medical_engine():
-    """
-    Background initialization.
-
-    Uvicorn can bind to Render's port first, while this task loads
-    the heavy medical engine.
-    """
-    logger.info(
-        "Starting background medical engine initialization..."
-    )
-
-    await initialize_medical_engine()
-
-
-async def wait_for_medical_engine():
-    """
-    Wait for the background engine initialization.
-
-    If initialization has not started, start it.
-    If initialization is already running, wait for it.
-    """
-    global _medical_engine
-
-    if _medical_engine is not None:
-        return _medical_engine
-
-    # Start initialization if necessary.
-    if not _engine_loading:
-        asyncio.create_task(
-            initialize_medical_engine()
+        clean = normalize_text(
+            str(feature)
         )
 
-    start = time.time()
+        normalized_features[clean] = feature
 
-    while _medical_engine is None and _engine_loading:
+    matched = []
 
-        elapsed = time.time() - start
+    for symptom in symptoms:
 
-        if elapsed >= ENGINE_MAX_WAIT_SECONDS:
-            logger.error(
-                "Medical engine initialization timed out after %s seconds.",
-                ENGINE_MAX_WAIT_SECONDS,
+        normalized_symptom = normalize_text(
+            symptom
+        )
+
+        # Exact match
+        if normalized_symptom in normalized_features:
+
+            matched.append(
+                normalized_features[
+                    normalized_symptom
+                ]
             )
-            return None
 
-        await asyncio.sleep(0.5)
+            continue
 
-    return _medical_engine
+        # Partial/alias matching
+        for normalized_feature, original_feature in (
+            normalized_features.items()
+        ):
+
+            if (
+                normalized_symptom
+                in normalized_feature
+                or normalized_feature
+                in normalized_symptom
+            ):
+
+                matched.append(
+                    original_feature
+                )
+
+                break
+
+    return list(
+        dict.fromkeys(matched)
+    )
+
+
+# ============================================================
+# SAFETY ENGINE
+# ============================================================
+
+EMERGENCY_SYMPTOMS = {
+    "chest pain",
+    "breathing difficulty",
+}
+
+
+def assess_risk(
+    symptoms: List[str],
+) -> Dict[str, Any]:
+
+    symptom_set = set(symptoms)
+
+    matched = [
+        symptom
+        for symptom in EMERGENCY_SYMPTOMS
+        if symptom in symptom_set
+    ]
+
+    if matched:
+
+        return {
+            "risk_score": 80,
+            "risk_level": "HIGH",
+            "high_risk_symptoms": matched,
+        }
+
+    moderate_symptoms = {
+        "vomiting",
+        "dizziness",
+        "high fever",
+    }
+
+    moderate_count = len(
+        symptom_set.intersection(
+            moderate_symptoms
+        )
+    )
+
+    if moderate_count >= 2:
+
+        return {
+            "risk_score": 40,
+            "risk_level": "MODERATE",
+            "high_risk_symptoms": [],
+        }
+
+    return {
+        "risk_score": 0,
+        "risk_level": "LOW",
+        "high_risk_symptoms": [],
+    }
+
+
+# ============================================================
+# EMERGENCY ENGINE
+# ============================================================
+
+def emergency_check(
+    symptoms: List[str],
+) -> Dict[str, Any]:
+
+    symptom_set = set(symptoms)
+
+    if (
+        "chest pain" in symptom_set
+        and "breathing difficulty" in symptom_set
+    ):
+
+        return {
+            "emergency": True,
+            "severity": "CRITICAL",
+            "matched_rules": [
+                "chest_pain_and_breathing_difficulty"
+            ],
+            "message": (
+                "Seek urgent medical attention "
+                "immediately."
+            ),
+        }
+
+    if (
+        "breathing difficulty"
+        in symptom_set
+    ):
+
+        return {
+            "emergency": True,
+            "severity": "HIGH",
+            "matched_rules": [
+                "breathing_difficulty"
+            ],
+            "message": (
+                "Breathing difficulty can require "
+                "urgent medical evaluation."
+            ),
+        }
+
+    return {
+        "emergency": False,
+        "severity": "NORMAL",
+        "matched_rules": [],
+        "message": "",
+    }
+
+
+# ============================================================
+# LOAD EDGE MODEL
+# ============================================================
+
+def initialize_edge_ai():
+
+    global disease_model
+    global feature_columns
+    global engine_ready
+    global engine_error
+
+    try:
+
+        logger.info(
+            "=============================================="
+        )
+
+        logger.info(
+            "Initializing Edge AI..."
+        )
+
+        logger.info(
+            "Model path: %s",
+            MODEL_PATH,
+        )
+
+        logger.info(
+            "Feature path: %s",
+            FEATURE_PATH,
+        )
+
+        if joblib is None:
+
+            raise RuntimeError(
+                "joblib is not installed"
+            )
+
+        if MODEL_PATH is None:
+
+            raise FileNotFoundError(
+                "disease_model.pkl not found"
+            )
+
+        if FEATURE_PATH is None:
+
+            raise FileNotFoundError(
+                "feature_columns.pkl not found"
+            )
+
+        logger.info(
+            "Loading pre-trained disease model..."
+        )
+
+        disease_model = joblib.load(
+            MODEL_PATH
+        )
+
+        feature_columns = joblib.load(
+            FEATURE_PATH
+        )
+
+        if hasattr(
+            feature_columns,
+            "tolist"
+        ):
+
+            feature_columns = (
+                feature_columns.tolist()
+            )
+
+        feature_columns = list(
+            feature_columns
+        )
+
+        logger.info(
+            "ML model loaded with %d features.",
+            len(feature_columns),
+        )
+
+        logger.info(
+            "Edge AI ready."
+        )
+
+        engine_ready = True
+        engine_error = None
+
+    except Exception as exc:
+
+        engine_ready = False
+        engine_error = str(exc)
+
+        logger.exception(
+            "Edge AI initialization failed"
+        )
+
+
+# ============================================================
+# EDGE ML PREDICTION
+# ============================================================
+
+def edge_predict(
+    symptoms: List[str],
+) -> Dict[str, Any]:
+
+    if not engine_ready:
+
+        return {
+            "status": "unavailable",
+            "condition": None,
+            "confidence": 0,
+            "top_predictions": [],
+            "active_features": [],
+        }
+
+    matched_features = (
+        match_symptoms_to_model_features(
+            symptoms
+        )
+    )
+
+    logger.info(
+        "Symptoms extracted: %s",
+        symptoms,
+    )
+
+    logger.info(
+        "Model features matched: %s",
+        matched_features,
+    )
+
+    if not matched_features:
+
+        return {
+            "status": "needs_more_information",
+            "condition": None,
+            "confidence": 0,
+            "top_predictions": [],
+            "active_features": [],
+        }
+
+    vector = np.zeros(
+        len(feature_columns),
+        dtype=np.int8,
+    )
+
+    normalized_active = {
+        normalize_text(x)
+        for x in matched_features
+    }
+
+    for index, feature in enumerate(
+        feature_columns
+    ):
+
+        if (
+            normalize_text(feature)
+            in normalized_active
+        ):
+
+            vector[index] = 1
+
+    try:
+
+        X = vector.reshape(
+            1,
+            -1,
+        )
+
+        prediction = disease_model.predict(
+            X
+        )[0]
+
+        top_predictions = []
+
+        confidence = 0.0
+
+        if hasattr(
+            disease_model,
+            "predict_proba",
+        ):
+
+            probabilities = (
+                disease_model.predict_proba(X)[0]
+            )
+
+            classes = disease_model.classes_
+
+            ranking = sorted(
+                zip(
+                    classes,
+                    probabilities,
+                ),
+                key=lambda x: x[1],
+                reverse=True,
+            )
+
+            top_predictions = [
+                {
+                    "condition": str(
+                        condition
+                    ),
+                    "confidence": round(
+                        float(
+                            probability
+                        ),
+                        4,
+                    ),
+                }
+                for condition, probability
+                in ranking[:5]
+            ]
+
+            if top_predictions:
+
+                confidence = (
+                    top_predictions[0][
+                        "confidence"
+                    ]
+                )
+
+        return {
+            "status": "success",
+            "condition": str(
+                prediction
+            ),
+            "confidence": confidence,
+            "top_predictions": top_predictions,
+            "active_features": matched_features,
+        }
+
+    except Exception as exc:
+
+        logger.exception(
+            "Edge ML prediction failed"
+        )
+
+        return {
+            "status": "error",
+            "condition": None,
+            "confidence": 0,
+            "top_predictions": [],
+            "active_features": matched_features,
+            "error": str(exc),
+        }
+
+
+# ============================================================
+# LAZY CLOUD RAG
+# ============================================================
+
+def initialize_rag():
+
+    global rag_engine
+    global rag_error
+    global rag_initialized
+    global faiss
+    global SentenceTransformer
+    global torch
+
+    if rag_initialized:
+
+        return rag_engine
+
+    rag_initialized = True
+
+    try:
+
+        logger.info(
+            "Initializing Cloud RAG..."
+        )
+
+        import faiss as faiss_module
+
+        faiss = faiss_module
+
+        from sentence_transformers import (
+            SentenceTransformer as ST,
+        )
+
+        SentenceTransformer = ST
+
+        try:
+
+            import torch as torch_module
+
+            torch = torch_module
+
+            # Force CPU
+            torch.set_num_threads(
+                max(
+                    1,
+                    min(
+                        2,
+                        os.cpu_count()
+                        or 1,
+                    ),
+                )
+            )
+
+        except Exception:
+
+            torch = None
+
+        if FAISS_PATH is None:
+
+            raise FileNotFoundError(
+                "rag_index.faiss not found"
+            )
+
+        logger.info(
+            "Loading FAISS index..."
+        )
+
+        index = faiss.read_index(
+            str(FAISS_PATH)
+        )
+
+        model_name = os.getenv(
+            "EMBEDDING_MODEL",
+            "sentence-transformers/all-MiniLM-L6-v2",
+        )
+
+        logger.info(
+            "Loading embedding model: %s",
+            model_name,
+        )
+
+        embedding_model = (
+            SentenceTransformer(
+                model_name,
+                device="cpu",
+            )
+        )
+
+        rag_engine = {
+            "index": index,
+            "embedding_model": (
+                embedding_model
+            ),
+        }
+
+        rag_error = None
+
+        logger.info(
+            "Cloud RAG initialized successfully."
+        )
+
+        return rag_engine
+
+    except Exception as exc:
+
+        rag_error = str(exc)
+
+        logger.exception(
+            "Cloud RAG initialization failed"
+        )
+
+        rag_engine = None
+
+        return None
+
+
+# ============================================================
+# CLOUD RAG SEARCH
+# ============================================================
+
+def rag_search(
+    query: str,
+) -> List[Dict[str, Any]]:
+
+    engine = initialize_rag()
+
+    if engine is None:
+
+        return []
+
+    try:
+
+        embedding = (
+            engine[
+                "embedding_model"
+            ].encode(
+                [query],
+                normalize_embeddings=True,
+            )
+        )
+
+        scores, indices = (
+            engine["index"].search(
+                np.asarray(
+                    embedding,
+                    dtype=np.float32,
+                ),
+                RAG_TOP_K,
+            )
+        )
+
+        results = []
+
+        for score, index in zip(
+            scores[0],
+            indices[0],
+        ):
+
+            if index < 0:
+                continue
+
+            results.append(
+                {
+                    "score": float(score),
+                    "index": int(index),
+                }
+            )
+
+        return results
+
+    except Exception:
+
+        logger.exception(
+            "RAG search failed"
+        )
+
+        return []
+
+
+# ============================================================
+# CLOUD ENHANCEMENT
+# ============================================================
+
+def cloud_enhance(
+    query: str,
+    condition: Optional[str],
+    symptoms: List[str],
+) -> Dict[str, Any]:
+
+    if not ENABLE_CLOUD:
+
+        return {
+            "available": False,
+            "rag_used": False,
+            "message": (
+                "Cloud enhancement disabled."
+            ),
+        }
+
+    if not ENABLE_RAG:
+
+        return {
+            "available": True,
+            "rag_used": False,
+            "message": (
+                "Cloud RAG is currently "
+                "disabled for lightweight deployment."
+            ),
+        }
+
+    search_query = query
+
+    if condition:
+
+        search_query = (
+            f"{condition}. "
+            f"Symptoms: "
+            f"{', '.join(symptoms)}. "
+            f"{query}"
+        )
+
+    results = rag_search(
+        search_query
+    )
+
+    if not results:
+
+        return {
+            "available": False,
+            "rag_used": False,
+            "message": (
+                "Cloud medical knowledge "
+                "is temporarily unavailable."
+            ),
+        }
+
+    return {
+        "available": True,
+        "rag_used": True,
+        "results": results,
+    }
 
 
 # ============================================================
@@ -296,491 +1212,205 @@ async def wait_for_medical_engine():
 # ============================================================
 
 @app.on_event("startup")
-async def startup_event():
-    logger.info("==============================================")
-    logger.info("AI CHIKITSALYA API STARTING")
-    logger.info("Version: %s", APP_VERSION)
-    logger.info("PORT: %s", PORT)
-    logger.info("Allowed origins: %s", ALLOWED_ORIGINS)
-    logger.info("==============================================")
+async def startup():
 
-    # Start loading without blocking HTTP server startup.
-    asyncio.create_task(
-        preload_medical_engine()
+    logger.info(
+        "=============================================="
     )
 
     logger.info(
-        "HTTP server startup complete; "
-        "medical engine loading in background."
+        "AI CHIKITSALYA API STARTING"
     )
 
-
-# ============================================================
-# RESPONSE NORMALIZATION
-# ============================================================
-
-def _condition_name(item: Dict[str, Any]) -> str:
-    return str(
-        item.get("name")
-        or item.get("disease")
-        or item.get("condition")
-        or "Unknown"
+    logger.info(
+        "Version: 3.0.0"
     )
 
+    logger.info(
+        "PORT: %s",
+        PORT,
+    )
 
-def _condition_score(item: Dict[str, Any]) -> float:
-    try:
-        value = (
-            item.get("score")
-            if item.get("score") is not None
-            else item.get("confidence", 0)
+    logger.info(
+        "Edge AI: enabled"
+    )
+
+    logger.info(
+        "Cloud AI: %s",
+        ENABLE_CLOUD,
+    )
+
+    logger.info(
+        "Cloud RAG: %s",
+        ENABLE_RAG,
+    )
+
+    logger.info(
+        "Allowed origins: %s",
+        ALLOWED_ORIGINS,
+    )
+
+    logger.info(
+        "=============================================="
+    )
+
+    # CRITICAL:
+    # Only load lightweight Edge AI here.
+    initialize_edge_ai()
+
+    if engine_ready:
+
+        logger.info(
+            "=============================================="
         )
 
-        value = float(value)
-
-        # Accept either 0-1 or 0-100 representations.
-        if value > 1:
-            value = value / 100.0
-
-        return max(0.0, min(1.0, value))
-
-    except (TypeError, ValueError):
-        return 0.0
-
-
-def _normalize_predictions(
-    raw: Dict[str, Any],
-) -> List[Dict[str, Any]]:
-
-    candidates = (
-        raw.get("possible_conditions")
-        or raw.get("predictions")
-        or raw.get("top_predictions")
-        or []
-    )
-
-    output: List[Dict[str, Any]] = []
-
-    if isinstance(candidates, dict):
-        candidates = [
-            {
-                "disease": key,
-                "confidence": value,
-            }
-            for key, value in candidates.items()
-        ]
-
-    for item in candidates:
-
-        if isinstance(item, str):
-            output.append(
-                {
-                    "disease": item,
-                    "confidence": 0.0,
-                }
-            )
-            continue
-
-        if not isinstance(item, dict):
-            continue
-
-        output.append(
-            {
-                "disease": _condition_name(item),
-                "confidence": _condition_score(item),
-            }
+        logger.info(
+            "EDGE AI READY"
         )
 
-    output.sort(
-        key=lambda x: x["confidence"],
-        reverse=True,
-    )
-
-    return output
-
-
-def _normalize_risk(
-    raw_risk: Dict[str, Any],
-) -> Dict[str, Any]:
-
-    level = str(
-        raw_risk.get("risk_level")
-        or raw_risk.get("level")
-        or "LOW"
-    ).upper()
-
-    try:
-        score = float(
-            raw_risk.get(
-                "risk_score",
-                0,
-            )
-        )
-    except (TypeError, ValueError):
-        score = 0.0
-
-    symptoms = list(
-        raw_risk.get("high_risk_symptoms")
-        or raw_risk.get("red_flags")
-        or []
-    )
-
-    return {
-        "risk_score": score,
-        "risk_level": level,
-        "high_risk_symptoms": symptoms,
-    }
-
-
-def _normalize_emergency(
-    raw_risk: Dict[str, Any],
-) -> Dict[str, Any]:
-
-    emergency = bool(
-        raw_risk.get("emergency")
-        or str(
-            raw_risk.get("risk_level", "")
-        ).upper() == "EMERGENCY"
-    )
-
-    matched = list(
-        raw_risk.get("matched_rules")
-        or raw_risk.get("red_flags")
-        or raw_risk.get("high_risk_symptoms")
-        or []
-    )
-
-    return {
-        "emergency": emergency,
-        "severity": (
-            "EMERGENCY"
-            if emergency
-            else str(
-                raw_risk.get("risk_level")
-                or "NORMAL"
-            ).upper()
-        ),
-        "matched_rules": matched,
-        "message": (
-            "Potential emergency warning signs were detected. "
-            "Seek urgent medical evaluation."
-            if emergency
-            else ""
-        ),
-    }
-
-
-def _follow_up_questions(
-    query: str,
-) -> List[str]:
-
-    text = query.lower()
-    questions: List[str] = []
-
-    duration_markers = [
-        "day",
-        "days",
-        "week",
-        "weeks",
-        "month",
-        "months",
-        "hour",
-        "hours",
-        "since",
-        "yesterday",
-        "today",
-    ]
-
-    if not any(
-        marker in text
-        for marker in duration_markers
-    ):
-        questions.append(
-            "How long have you had these symptoms?"
+        logger.info(
+            "Disease model: READY"
         )
 
-    trend_markers = [
-        "better",
-        "worse",
-        "improving",
-        "improved",
-        "getting worse",
-        "same",
-        "stable",
-    ]
-
-    if not any(
-        marker in text
-        for marker in trend_markers
-    ):
-        questions.append(
-            "Are the symptoms getting better, worse, "
-            "or staying the same?"
+        logger.info(
+            "Safety engine: READY"
         )
 
-    medication_markers = [
-        "medicine",
-        "medication",
-        "tablet",
-        "drug",
-        "taking",
-        "prescribed",
-        "condition",
-    ]
-
-    if not any(
-        marker in text
-        for marker in medication_markers
-    ):
-        questions.append(
-            "Are you taking any medicines or do you have "
-            "any known medical conditions?"
+        logger.info(
+            "Cloud RAG: LAZY LOADED"
         )
 
-    return questions[:3]
-
-
-def normalize_engine_response(
-    raw: Dict[str, Any],
-    query: str,
-) -> Dict[str, Any]:
-
-    if not isinstance(raw, dict):
-        raw = {
-            "reply": str(raw),
-        }
-
-    predictions = _normalize_predictions(raw)
-
-    top_prediction = (
-        predictions[0]
-        if predictions
-        else None
-    )
-
-    primary_condition = (
-        top_prediction["disease"]
-        if top_prediction
-        and top_prediction["disease"] != "Unknown"
-        else (
-            raw.get("ml_prediction")
-            or raw.get("condition")
-            or raw.get("rule_based_condition")
+        logger.info(
+            "=============================================="
         )
-    )
 
-    try:
-        confidence = (
-            float(
-                top_prediction["confidence"]
-            )
-            if top_prediction
-            else float(
-                raw.get("confidence", 0)
-            )
-        )
-    except (TypeError, ValueError):
-        confidence = 0.0
-
-    if confidence > 1:
-        confidence /= 100.0
-
-    confidence = max(
-        0.0,
-        min(1.0, confidence),
-    )
-
-    raw_risk = raw.get("risk") or {}
-
-    risk = _normalize_risk(
-        raw_risk
-    )
-
-    emergency = _normalize_emergency(
-        raw_risk
-    )
-
-    # Respect an explicit status from the engine when possible.
-    engine_status = str(
-        raw.get("status", "")
-    ).lower()
-
-    if emergency["emergency"]:
-        assessment_status = "urgent"
-    elif engine_status in {
-        "needs_more_information",
-        "need_more_information",
-    }:
-        assessment_status = "needs_more_information"
-    elif confidence >= 0.65:
-        assessment_status = "high_confidence"
-    elif confidence >= 0.30:
-        assessment_status = "moderate_confidence"
     else:
-        assessment_status = "needs_more_information"
 
-    reply = raw.get("reply")
-
-    if not reply:
-        reply = raw.get("message")
-
-    if not reply:
-        reply = (
-            "The AI completed an initial screening. "
-            "Please review the assessment and consider "
-            "the recommended next steps."
+        logger.error(
+            "EDGE AI FAILED: %s",
+            engine_error,
         )
-
-    return {
-        "status": (
-            "urgent"
-            if emergency["emergency"]
-            else "success"
-        ),
-
-        "assessment_status": assessment_status,
-
-        "reply": str(reply),
-
-        "condition": primary_condition,
-        "ml_prediction": primary_condition,
-        "confidence": confidence,
-
-        "top_predictions": predictions[:5],
-
-        "active_features": list(
-            raw.get("known_symptoms")
-            or raw.get("active_features")
-            or []
-        ),
-
-        "follow_up_questions": (
-            _follow_up_questions(query)
-            if assessment_status
-            == "needs_more_information"
-            else []
-        ),
-
-        "risk": risk,
-        "emergency": emergency,
-
-        "edge_ai": bool(
-            raw.get("edge_ai", True)
-        ),
-
-        "rag_used": bool(
-            raw.get("rag_used")
-            or raw.get("rag")
-        ),
-
-        "model_version": raw.get(
-            "model_version",
-            "hybrid-v2",
-        ),
-
-        "rule_based_condition": raw.get(
-            "rule_based_condition"
-        ),
-
-        "disclaimer": DISCLAIMER,
-    }
 
 
 # ============================================================
-# BASIC ENDPOINTS
+# ROOT
 # ============================================================
 
 @app.get("/")
 async def root():
+
     return {
-        "status": "online",
-        "service": APP_NAME,
-        "version": APP_VERSION,
-        "health": "/health",
-        "status_endpoint": "/status",
-        "docs": "/docs",
+        "service": "AI Chikitsalya",
+        "status": (
+            "ready"
+            if engine_ready
+            else "degraded"
+        ),
+        "architecture": (
+            "Edge AI + Cloud AI"
+        ),
+        "version": "3.0.0",
+        "edge_ai": engine_ready,
+        "cloud_ai": ENABLE_CLOUD,
+        "rag_enabled": ENABLE_RAG,
     }
 
+
+# ============================================================
+# HEALTH
+# ============================================================
 
 @app.get("/health")
 async def health():
-    """
-    Lightweight health check.
 
-    This endpoint does not wait for ML initialization, which is
-    important for Render's health/port detection.
-    """
     return {
-        "status": "healthy",
-        "service": APP_NAME,
-        "version": APP_VERSION,
-        "engine_ready": _engine_ready,
-        "engine_loading": _engine_loading,
-        "engine_error": _engine_error,
+        "status": (
+            "healthy"
+            if engine_ready
+            else "degraded"
+        ),
+        "edge_ai": engine_ready,
+        "cloud_ai": ENABLE_CLOUD,
+        "rag_enabled": ENABLE_RAG,
+        "rag_loaded": (
+            rag_engine is not None
+        ),
+        "model_features": len(
+            feature_columns
+        ),
+        "error": engine_error,
     }
 
 
-@app.get("/status")
-async def status():
+# ============================================================
+# MODEL STATUS
+# ============================================================
+
+@app.get("/model-status")
+async def model_status():
+
     return {
-        "status": "online",
-        "service": APP_NAME,
-        "version": APP_VERSION,
-        "port": PORT,
-        "engine": {
-            "ready": _engine_ready,
-            "loading": _engine_loading,
-            "error": _engine_error,
-            "started_at": _engine_started_at,
+        "edge_ai": {
+            "ready": engine_ready,
+            "model_loaded": (
+                disease_model is not None
+            ),
+            "feature_count": len(
+                feature_columns
+            ),
+            "error": engine_error,
+        },
+
+        "cloud_ai": {
+            "enabled": ENABLE_CLOUD,
+        },
+
+        "rag": {
+            "enabled": ENABLE_RAG,
+            "initialized": rag_initialized,
+            "loaded": rag_engine is not None,
+            "error": rag_error,
         },
     }
 
 
-@app.get("/model-status")
-async def model_status():
-    engine = _medical_engine
+# ============================================================
+# SYSTEM STATUS
+# ============================================================
 
-    result: Dict[str, Any] = {
-        "engine_ready": _engine_ready,
-        "engine_loading": _engine_loading,
-        "engine_error": _engine_error,
+@app.get("/system-status")
+async def system_status():
+
+    return {
+        "service": "AI Chikitsalya",
+
+        "edge_ai": {
+            "available": engine_ready,
+            "disease_model": (
+                disease_model is not None
+            ),
+            "safety_engine": True,
+        },
+
+        "cloud_ai": {
+            "available": ENABLE_CLOUD,
+        },
+
+        "rag": {
+            "available": (
+                ENABLE_RAG
+                and rag_engine is not None
+            ),
+            "enabled": ENABLE_RAG,
+            "loaded": (
+                rag_engine is not None
+            ),
+        },
     }
-
-    if engine is None:
-        return result
-
-    try:
-        explicit_status = getattr(
-            engine,
-            "MODEL_STATUS",
-            None,
-        )
-
-        if isinstance(explicit_status, dict):
-            result["models"] = explicit_status
-        else:
-            result["models"] = {
-                "engine_module": True,
-                "disease_model": getattr(
-                    engine,
-                    "model_ml",
-                    None,
-                ) is not None,
-                "faiss_index": getattr(
-                    engine,
-                    "index",
-                    None,
-                ) is not None,
-            }
-
-    except Exception as exc:
-        result["status_error"] = str(exc)
-
-    return result
 
 
 # ============================================================
-# PREDICTION
+# MAIN PREDICTION ENDPOINT
 # ============================================================
 
 @app.post("/predict")
@@ -788,250 +1418,341 @@ async def predict(
     request: PredictionRequest,
 ):
 
-    query = request.query.strip()
-
-    if not query:
-        return {
-            "status": "error",
-            "message": "Please enter a medical question.",
-        }
-
     logger.info(
-        "Prediction request received | lang=%s | chars=%d",
+        "Prediction request received | "
+        "lang=%s | chars=%d",
         request.lang,
-        len(query),
+        len(request.query),
     )
 
     # --------------------------------------------------------
-    # WAIT FOR MEDICAL ENGINE
+    # EDGE SYMPTOM EXTRACTION
     # --------------------------------------------------------
 
-    engine = await wait_for_medical_engine()
+    symptoms = extract_symptoms(
+        request.query
+    )
 
-    if engine is None:
+    logger.info(
+        "Extracted symptoms: %s",
+        symptoms,
+    )
+
+    # --------------------------------------------------------
+    # SAFETY
+    # --------------------------------------------------------
+
+    risk = assess_risk(
+        symptoms
+    )
+
+    emergency = emergency_check(
+        symptoms
+    )
+
+    # --------------------------------------------------------
+    # EDGE ML
+    # --------------------------------------------------------
+
+    if not engine_ready:
 
         logger.error(
-            "Medical engine unavailable: %s",
-            _engine_error,
+            "Edge model unavailable: %s",
+            engine_error,
         )
 
         raise HTTPException(
             status_code=503,
             detail=(
-                "AI model service is still initializing or "
-                "unavailable. Please try again shortly."
+                "Edge medical AI model "
+                "is currently unavailable."
             ),
         )
 
-    # --------------------------------------------------------
-    # PREDICTION
-    # --------------------------------------------------------
-
-    try:
-
-        if not hasattr(engine, "ask"):
-            raise RuntimeError(
-                "medical_ai.py does not expose an ask(query) function."
-            )
-
-        raw = await asyncio.to_thread(
-            engine.ask,
-            query,
-        )
-
-        response = normalize_engine_response(
-            raw=raw,
-            query=query,
-        )
-
-        logger.info(
-            "Prediction complete | condition=%s | confidence=%.3f | "
-            "risk=%s | rag=%s",
-
-            response.get("condition"),
-
-            response.get(
-                "confidence",
-                0,
-            ),
-
-            response.get(
-                "risk",
-                {},
-            ).get(
-                "risk_level",
-            ),
-
-            response.get(
-                "rag_used",
-            ),
-        )
-
-        return response
-
-    except Exception as exc:
-
-        logger.exception(
-            "Prediction failed."
-        )
-
-        raise HTTPException(
-            status_code=500,
-            detail=(
-                f"Prediction failed: "
-                f"{type(exc).__name__}: {exc}"
-            ),
-        )
-
-
-# ============================================================
-# COMPATIBILITY CHAT ENDPOINT
-# ============================================================
-
-@app.post("/ask")
-async def ask(
-    request: TextRequest,
-):
-    return await predict(
-        PredictionRequest(
-            query=request.text,
-            lang="en",
-        )
+    result = edge_predict(
+        symptoms
     )
 
+    # --------------------------------------------------------
+    # NEED MORE INFORMATION
+    # --------------------------------------------------------
+
+    if result["status"] == (
+        "needs_more_information"
+    ):
+
+        return {
+            "status": "success",
+
+            "assessment_status":
+                "needs_more_information",
+
+            "reply": (
+                "More information is needed "
+                "before AI Chikitsalya can "
+                "provide a condition-specific "
+                "assessment."
+            ),
+
+            "condition": None,
+
+            "ml_prediction": None,
+
+            "confidence": 0,
+
+            "top_predictions": [],
+
+            "active_features": [],
+
+            "follow_up_questions": [
+                "How long have you had these symptoms?",
+                "Are the symptoms getting better, worse, or staying the same?",
+                "Are you taking any medicines or do you have any known medical conditions?",
+            ],
+
+            "risk": risk,
+
+            "emergency": emergency,
+
+            "edge_ai": True,
+
+            "rag_used": False,
+
+            "model_version": "edge-v1",
+
+            "disclaimer": (
+                "AI Chikitsalya provides health "
+                "information and decision support. "
+                "It does not replace a qualified "
+                "medical professional or provide "
+                "a confirmed diagnosis."
+            ),
+        }
+
+    # --------------------------------------------------------
+    # SUCCESS
+    # --------------------------------------------------------
+
+    condition = result.get(
+        "condition"
+    )
+
+    confidence = result.get(
+        "confidence",
+        0,
+    )
+
+    top_predictions = result.get(
+        "top_predictions",
+        [],
+    )
+
+    # --------------------------------------------------------
+    # EDGE RESPONSE
+    # --------------------------------------------------------
+
+    response = {
+        "status": "success",
+
+        "assessment_status":
+            "preliminary_assessment",
+
+        "reply": (
+            f"AI Chikitsalya generated "
+            f"a preliminary assessment "
+            f"based on the entered symptoms."
+        ),
+
+        "condition": condition,
+
+        "ml_prediction": condition,
+
+        "confidence": confidence,
+
+        "top_predictions":
+            top_predictions,
+
+        "active_features":
+            result.get(
+                "active_features",
+                [],
+            ),
+
+        "risk": risk,
+
+        "emergency": emergency,
+
+        "edge_ai": True,
+
+        "rag_used": False,
+
+        "cloud_available":
+            ENABLE_CLOUD,
+
+        "model_version": "edge-v1",
+
+        "disclaimer": (
+            "AI Chikitsalya provides health "
+            "information and decision support. "
+            "It does not replace a qualified "
+            "medical professional or provide "
+            "a confirmed diagnosis."
+        ),
+    }
+
+    return response
+
 
 # ============================================================
-# IMAGE ANALYSIS
+# CLOUD ENHANCEMENT ENDPOINT
+# ============================================================
+
+@app.post("/enhance")
+async def enhance(
+    request: EnhanceRequest,
+):
+
+    logger.info(
+        "Cloud enhancement requested"
+    )
+
+    result = cloud_enhance(
+        query=request.query,
+        condition=request.condition,
+        symptoms=request.symptoms,
+    )
+
+    return {
+        "status": "success",
+        **result,
+    }
+
+
+# ============================================================
+# RAG STATUS
+# ============================================================
+
+@app.get("/cloud-status")
+async def cloud_status():
+
+    return {
+        "cloud_enabled": ENABLE_CLOUD,
+
+        "rag_enabled": ENABLE_RAG,
+
+        "rag_initialized":
+            rag_initialized,
+
+        "rag_loaded":
+            rag_engine is not None,
+
+        "rag_error":
+            rag_error,
+    }
+
+
+# ============================================================
+# IMAGE ENDPOINT
 # ============================================================
 
 @app.post("/analyze-image")
 async def analyze_image(
     file: UploadFile = File(...),
 ):
-    """
-    Optional vision endpoint.
 
-    Requires python-multipart in requirements.txt.
     """
-    allowed_types = {
-        "image/jpeg",
-        "image/png",
-        "image/webp",
+    Lightweight placeholder for image analysis.
+
+    Heavy vision models should NOT be loaded during
+    API startup.
+
+    This endpoint can later activate a cloud vision
+    engine only when requested.
+    """
+
+    filename = file.filename or ""
+
+    allowed_extensions = {
+        ".jpg",
+        ".jpeg",
+        ".png",
+        ".webp",
     }
 
-    if file.content_type not in allowed_types:
+    extension = Path(
+        filename
+    ).suffix.lower()
+
+    if extension not in allowed_extensions:
+
         raise HTTPException(
             status_code=400,
             detail=(
-                "Unsupported image type. "
-                "Use JPEG, PNG, or WebP."
+                "Unsupported image format."
             ),
         )
-
-    filename = file.filename or "uploaded-image"
-
-    content = await file.read()
-
-    if len(content) > 10 * 1024 * 1024:
-        raise HTTPException(
-            status_code=413,
-            detail="Image is too large. Maximum size is 10 MB.",
-        )
-
-    logger.info(
-        "Image received | filename=%s | size=%d | type=%s",
-        filename,
-        len(content),
-        file.content_type,
-    )
-
-    analyzer = None
-
-    for module_name in [
-        "image_analyzer",
-        "vision.image_analyzer",
-    ]:
-        try:
-            analyzer = importlib.import_module(
-                module_name
-            )
-            break
-        except Exception:
-            continue
-
-    if analyzer is None:
-        return {
-            "status": "success",
-            "image_analyzed": False,
-            "message": (
-                "Image received successfully, but no vision "
-                "engine is configured in this deployment."
-            ),
-            "filename": filename,
-            "disclaimer": DISCLAIMER,
-        }
 
     try:
 
-        if hasattr(
-            analyzer,
-            "analyze_image",
-        ):
-            result = await asyncio.to_thread(
-                analyzer.analyze_image,
-                content,
-            )
+        contents = await file.read()
 
-        elif hasattr(
-            analyzer,
-            "analyze",
-        ):
-            result = await asyncio.to_thread(
-                analyzer.analyze,
-                content,
-            )
+        if not contents:
 
-        else:
-            result = {
-                "message": (
-                    "Vision module found, but no supported "
-                    "analysis function is exposed."
-                )
-            }
+            raise HTTPException(
+                status_code=400,
+                detail="Empty image.",
+            )
 
         return {
             "status": "success",
-            "image_analyzed": True,
-            "result": result,
+
+            "message": (
+                "Image received successfully. "
+                "Cloud vision analysis can be "
+                "enabled as an optional service."
+            ),
+
             "filename": filename,
-            "disclaimer": DISCLAIMER,
+
+            "size_bytes": len(contents),
+
+            "edge_ai": True,
+
+            "cloud_vision": False,
         }
+
+    except HTTPException:
+
+        raise
 
     except Exception as exc:
 
         logger.exception(
-            "Image analysis failed."
+            "Image processing failed"
         )
 
         raise HTTPException(
             status_code=500,
-            detail=(
-                f"Image analysis failed: {exc}"
-            ),
+            detail=str(exc),
         )
 
 
 # ============================================================
-# LOCAL ENTRYPOINT
+# START SERVER
 # ============================================================
 
 if __name__ == "__main__":
+
     import uvicorn
+
+    logger.info(
+        "Starting Uvicorn on port %s",
+        PORT,
+    )
 
     uvicorn.run(
         "api:app",
-        host=HOST,
+        host="0.0.0.0",
         port=PORT,
         reload=False,
-        log_level=LOG_LEVEL.lower(),
     )
