@@ -41,19 +41,17 @@ FRONTEND_URL = os.getenv(
     "http://localhost:3000",
 ).strip().rstrip("/")
 
-ALLOWED_ORIGINS = sorted(
-    {
-        x.strip().rstrip("/")
-        for x in [
-            "http://localhost:3000",
-            "http://127.0.0.1:3000",
-            "https://ai-chikitsalya.co.in",
-            "https://www.ai-chikitsalya.co.in",
-            FRONTEND_URL,
-        ]
-        if x.strip()
-    }
-)
+ALLOWED_ORIGINS = [
+    "http://127.0.0.1:3000",
+    "http://localhost:3000",
+
+    # Production domain
+    "https://ai-chikitsalya.co.in",
+    "https://www.ai-chikitsalya.co.in",
+
+    # Render frontend
+    "https://ai-chikitsalya-frontend.onrender.com",
+]
 
 ENGINE_MAX_WAIT_SECONDS = int(
     os.getenv("ENGINE_MAX_WAIT_SECONDS", "180")
