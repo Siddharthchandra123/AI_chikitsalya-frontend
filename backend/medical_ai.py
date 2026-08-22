@@ -119,6 +119,10 @@ answers: List[str] = []
 _embedding_model = None
 
 MODEL_STATUS = {
+    "initialization_started": False,
+    "initialization_complete": False,
+    "initialization_error": None,
+    "datasets": False,
     "disease_model": False,
     "feature_columns": False,
     "faiss": False,
@@ -1445,6 +1449,21 @@ def get_model_status() -> Dict[str, Any]:
 # ============================================================
 
 def initialize() -> None:
+    """Initialize the medical engine safely.
+
+    IMPORTANT:
+    This function is NOT called during module import.
+    FastAPI controls initialization so Render can bind its port first.
+    """
+    global MODEL_STATUS
+
+    if MODEL_STATUS.get("initialization_started"):
+        logger.info("Medical engine initialization already started.")
+        return
+
+    MODEL_STATUS["initialization_started"] = True
+    MODEL_STATUS["initialization_error"] = None
+
     logger.info("=" * 60)
     logger.info("🚀 Initializing AI CHIKITSALYA")
     logger.info("Hybrid Edge + Cloud Medical AI")
@@ -1452,21 +1471,138 @@ def initialize() -> None:
 
     start = time.time()
 
-    load_data()
-    load_disease_model()
-    load_rag()
+    try:
+        # --------------------------------------------------------
+        # 1. DATASETS
+        # --------------------------------------------------------
+        logger.info("[1/4] Loading medical datasets...")
+        load_data()
+        MODEL_STATUS["datasets"] = True
+        logger.info("✓ Medical datasets ready")
 
-    logger.info(
-        "AI Chikitsalya initialized in %.2fs",
-        time.time() - start,
+        # --------------------------------------------------------
+        # 2. DISEASE MODEL
+        # --------------------------------------------------------
+        logger.info("[2/4] Loading disease prediction model...")
+        load_disease_model()
+
+        if MODEL_STATUS["disease_model"]:
+            logger.info(
+                "✓ Disease model ready | features=%d",
+                len(ml_columns),
+            )
+        else:
+            logger.warning("⚠ Disease model is unavailable")
+
+        # --------------------------------------------------------
+        # 3. FAISS
+        # --------------------------------------------------------
+        logger.info("[3/4] Loading FAISS medical knowledge...")
+        load_rag()
+
+        if MODEL_STATUS["faiss"]:
+            logger.info(
+                "✓ FAISS ready | vectors=%d",
+                int(faiss_index.ntotal)
+                if faiss_index is not None
+                else 0,
+            )
+        else:
+            logger.warning(
+                "⚠ FAISS unavailable; ML prediction can continue"
+                " without RAG"
+            )
+
+        # --------------------------------------------------------
+        # 4. EMBEDDINGS
+        # --------------------------------------------------------
+        logger.info(
+            "[4/4] MiniLM will load lazily on first RAG request: %s",
+            EMBEDDING_MODEL_NAME,
+        )
+
+        MODEL_STATUS["initialization_complete"] = True
+
+        elapsed = time.time() - start
+
+        logger.info("=" * 60)
+        logger.info("⚕️ AI CHIKITSALYA READY")
+        logger.info("Initialization time: %.2fs", elapsed)
+        logger.info("Model status: %s", MODEL_STATUS)
+        logger.info("=" * 60)
+
+    except Exception as exc:
+        MODEL_STATUS["initialization_error"] = str(exc)
+        MODEL_STATUS["initialization_complete"] = False
+
+        logger.exception(
+            "AI Chikitsalya initialization failed: %s",
+            exc,
+        )
+
+
+def is_ready() -> bool:
+    """Return True when the core medical engine is ready."""
+    return bool(
+        MODEL_STATUS.get("initialization_complete")
+        and MODEL_STATUS.get("disease_model")
     )
 
-    logger.info(
-        "Model status: %s",
-        MODEL_STATUS,
-    )
 
-    logger.info("⚕️ AI CHIKITSALYA READY")
+def get_model_status() -> Dict[str, Any]:
+    """Return detailed model/engine status for the FastAPI backend."""
+    status = dict(MODEL_STATUS)
+
+    status.update({
+        "ready": is_ready(),
+
+        "embedding_model_name": EMBEDDING_MODEL_NAME,
+
+        "rag_vectors": (
+            int(faiss_index.ntotal)
+            if faiss_index is not None
+            else 0
+        ),
+
+        "medical_knowledge_records": len(answers),
+
+        "ml_features": len(ml_columns),
+
+        "architecture": "Hybrid Edge + Cloud",
+
+        "thresholds": {
+            "high_confidence": HIGH_CONFIDENCE_THRESHOLD,
+            "moderate_confidence": MODERATE_CONFIDENCE_THRESHOLD,
+            "rag_similarity": RAG_SIMILARITY_THRESHOLD,
+        },
+
+        "edge_components": [
+            "Symptom Normalization",
+            "Symptom Engine",
+            "Risk Engine",
+            "Emergency Detection",
+            "Disease Classifier",
+        ],
+
+        "cloud_components": [
+            "FAISS RAG",
+            "MiniLM Embeddings",
+            "LLM Integration Hook",
+            "Medical Image Analysis Hook",
+        ],
+    })
+
+    return status
 
 
-initialize()
+# IMPORTANT:
+# There is intentionally NO initialize() call here.
+#
+# FastAPI should explicitly call:
+#
+#     medical_ai.initialize()
+#
+# from its startup/background initialization logic.
+#
+# This prevents importing medical_ai.py from blocking the HTTP
+# server before Render can detect the assigned $PORT.
