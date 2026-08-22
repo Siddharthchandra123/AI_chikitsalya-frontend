@@ -21,6 +21,7 @@ import {
   Wifi,
   WifiOff,
   Shield,
+  Sparkles,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -48,7 +49,6 @@ export function Navigation() {
     { href: "/doctors", label: t("doctors"), icon: Users },
     { href: "/pharmacy", label: t("pharmacy"), icon: ShoppingBag },
     { href: "/insurance", label: t("insurance"), icon: Shield },
-
   ];
 
   const currentLang = languages.find((l) => l.code === language);
