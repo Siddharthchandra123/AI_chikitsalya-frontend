@@ -6,95 +6,17 @@ import { Button } from "@/components/ui/button";
 import {
   ShoppingBag,
   MapPin,
-  Star,
-  Clock,
   Phone,
   Navigation as NavIcon,
   Search,
   Pill,
-  CheckCircle,
 } from "lucide-react";
 import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
+import { pharmacies } from "@/components/pharmacy/pharmacy";
 
-const pharmacies = [
-  {
-    id: 1,
-    name: "HealthPlus Pharmacy",
-    address: "123 Main Street, Downtown",
-    distance: "0.3 km",
-    rating: 4.8,
-    reviews: 156,
-    phone: "+1 555-0301",
-    timing: "8:00 AM - 10:00 PM",
-    open: true,
-    lat: 40.7128,
-    lng: -74.006,
-    medicines: ["Paracetamol", "Ibuprofen", "Amoxicillin", "Vitamins"],
-    hasDelivery: true,
-  },
-  {
-    id: 2,
-    name: "MediCare Drugs",
-    address: "456 Oak Avenue, Midtown",
-    distance: "0.8 km",
-    rating: 4.6,
-    reviews: 98,
-    phone: "+1 555-0302",
-    timing: "24/7",
-    open: true,
-    lat: 40.7148,
-    lng: -74.004,
-    medicines: ["Insulin", "Blood Pressure Meds", "Antibiotics"],
-    hasDelivery: true,
-  },
-  {
-    id: 3,
-    name: "Wellness Pharmacy",
-    address: "789 Elm Street, Uptown",
-    distance: "1.2 km",
-    rating: 4.9,
-    reviews: 234,
-    phone: "+1 555-0303",
-    timing: "9:00 AM - 9:00 PM",
-    open: true,
-    lat: 40.7108,
-    lng: -74.008,
-    medicines: ["Vitamins", "Supplements", "Organic Products"],
-    hasDelivery: false,
-  },
-  {
-    id: 4,
-    name: "City Drugstore",
-    address: "321 Pine Road, East Side",
-    distance: "1.5 km",
-    rating: 4.5,
-    reviews: 67,
-    phone: "+1 555-0304",
-    timing: "7:00 AM - 11:00 PM",
-    open: true,
-    lat: 40.7168,
-    lng: -74.002,
-    medicines: ["Generic Medicines", "OTC Drugs", "First Aid"],
-    hasDelivery: true,
-  },
-  {
-    id: 5,
-    name: "Family Health Pharmacy",
-    address: "567 Cedar Lane, West End",
-    distance: "2.0 km",
-    rating: 4.7,
-    reviews: 145,
-    phone: "+1 555-0305",
-    timing: "8:00 AM - 8:00 PM",
-    open: false,
-    lat: 40.7088,
-    lng: -74.01,
-    medicines: ["Pediatric Medicines", "Elderly Care", "Wellness Products"],
-    hasDelivery: true,
-  },
-];
+
 
 // Custom marker icon
 const createCustomIcon = (isSelected: boolean) => {
@@ -137,19 +59,31 @@ function MapUpdater({
 export default function PharmacyContent() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedPharmacy, setSelectedPharmacy] = useState<
-    (typeof pharmacies)[0] | null
+    (typeof pharmacies)[number] | null
   >(null);
-  const [mapCenter, setMapCenter] = useState<[number, number]>([40.7128, -74.006]);
+  const [mapCenter, setMapCenter] = useState<[number, number]>([22.9734, 78.6569]);
+  const [displayLimit, setDisplayLimit] = useState(50);
 
-  const filteredPharmacies = pharmacies.filter(
-    (pharmacy) =>
-      pharmacy.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      pharmacy.address.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const filteredPharmacies = pharmacies.filter((pharmacy) => {
+    const query = searchQuery.trim().toLowerCase();
 
-  const handleSelectPharmacy = (pharmacy: (typeof pharmacies)[0]) => {
+    if (!query) return true;
+
+    return (
+      (pharmacy.name && pharmacy.name.toLowerCase().includes(query)) ||
+      (pharmacy.address && pharmacy.address.toLowerCase().includes(query)) ||
+      (pharmacy.state && pharmacy.state.toLowerCase().includes(query)) ||
+      (pharmacy.district && pharmacy.district.toLowerCase().includes(query)) ||
+      (pharmacy.pincode && String(pharmacy.pincode).includes(query)) ||
+      (pharmacy.kendraCode && pharmacy.kendraCode.toLowerCase().includes(query))
+    );
+  });
+
+  const handleSelectPharmacy = (pharmacy: (typeof pharmacies)[number]) => {
     setSelectedPharmacy(pharmacy);
-    setMapCenter([pharmacy.lat, pharmacy.lng]);
+    if (pharmacy.lat != null && pharmacy.lng != null) {
+      setMapCenter([pharmacy.lat, pharmacy.lng]);
+    }
   };
 
   return (
@@ -159,11 +93,11 @@ export default function PharmacyContent() {
           <ShoppingBag className="h-8 w-8 text-success" />
         </div>
         <h1 className="mb-2 text-3xl font-bold text-foreground md:text-4xl">
-          Medical Shops
+          Jan Aushadhi Kendras
         </h1>
         <p className="mx-auto max-w-2xl text-muted-foreground">
-          Find pharmacies near you with medicine availability, pricing, and home
-          delivery options.
+          Find Government of India Jan Aushadhi Kendras across India by name,
+          address, district, state, PIN code, or Kendra code.
         </p>
       </div>
 
@@ -175,7 +109,10 @@ export default function PharmacyContent() {
             type="text"
             placeholder="Search pharmacies or medicines..."
             value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
+            onChange={(e) => {
+              setSearchQuery(e.target.value);
+              setDisplayLimit(50);
+            }}
             className="w-full rounded-lg border border-input bg-background py-2.5 pl-10 pr-4 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
           />
         </div>
@@ -195,32 +132,37 @@ export default function PharmacyContent() {
               url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
             <MapUpdater center={mapCenter} />
-            {filteredPharmacies.map((pharmacy) => (
-              <Marker
-                key={pharmacy.id}
-                position={[pharmacy.lat, pharmacy.lng]}
-                icon={createCustomIcon(selectedPharmacy?.id === pharmacy.id)}
-                eventHandlers={{
-                  click: () => handleSelectPharmacy(pharmacy),
-                }}
-              >
-                <Popup>
-                  <div className="min-w-[200px]">
-                    <h3 className="font-semibold">{pharmacy.name}</h3>
-                    <p className="text-sm text-gray-600">{pharmacy.address}</p>
-                    <div className="mt-2 flex items-center gap-2 text-sm">
-                      <Star className="h-4 w-4 fill-amber-400 text-amber-400" />
-                      <span>{pharmacy.rating}</span>
-                      <span
-                        className={`ml-2 ${pharmacy.open ? "text-green-600" : "text-red-600"}`}
-                      >
-                        {pharmacy.open ? "Open" : "Closed"}
+            {filteredPharmacies
+              .filter((pharmacy) => pharmacy.lat != null && pharmacy.lng != null)
+              .map((pharmacy) => (
+                <Marker
+                  key={pharmacy.id}
+                  position={[pharmacy.lat!, pharmacy.lng!]}
+                  icon={createCustomIcon(selectedPharmacy?.id === pharmacy.id)}
+                  eventHandlers={{
+                    click: () => handleSelectPharmacy(pharmacy),
+                  }}
+                >
+                  <Popup>
+                    <div className="min-w-[240px]">
+                      <h3 className="font-semibold">{pharmacy.name}</h3>
+                      <p className="text-sm text-gray-600">{pharmacy.address}</p>
+                      <p className="mt-1 text-xs text-gray-500">
+                        {pharmacy.district}, {pharmacy.state} • PIN {pharmacy.pincode}
+                      </p>
+                      {pharmacy.phone && (
+                        <p className="mt-2 text-sm">
+                          <Phone className="mr-1 inline h-3 w-3" />
+                          {pharmacy.phone}
+                        </p>
+                      )}
+                      <span className="mt-2 inline-block rounded-full bg-green-100 px-2 py-1 text-xs text-green-700">
+                        Jan Aushadhi Kendra
                       </span>
                     </div>
-                  </div>
-                </Popup>
-              </Marker>
-            ))}
+                  </Popup>
+                </Marker>
+              ))}
           </MapContainer>
         </Card>
 
@@ -231,12 +173,12 @@ export default function PharmacyContent() {
               Nearby Pharmacies
             </h2>
             <span className="text-sm text-muted-foreground">
-              {filteredPharmacies.length} found
+              Showing {Math.min(displayLimit, filteredPharmacies.length)} of {filteredPharmacies.length} found
             </span>
           </div>
 
           <div className="max-h-[540px] space-y-4 overflow-y-auto pr-2">
-            {filteredPharmacies.map((pharmacy) => (
+            {filteredPharmacies.slice(0, displayLimit).map((pharmacy) => (
               <Card
                 key={pharmacy.id}
                 className={`cursor-pointer p-4 transition-all hover:shadow-md ${
@@ -247,72 +189,52 @@ export default function PharmacyContent() {
                 onClick={() => handleSelectPharmacy(pharmacy)}
               >
                 <div className="flex items-start gap-4">
-                  <div
-                    className={`flex h-12 w-12 items-center justify-center rounded-lg ${
-                      pharmacy.open ? "bg-success/10" : "bg-muted"
-                    }`}
-                  >
-                    <Pill
-                      className={`h-6 w-6 ${pharmacy.open ? "text-success" : "text-muted-foreground"}`}
-                    />
+                  <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-success/10">
+                    <Pill className="h-6 w-6 text-success" />
                   </div>
                   <div className="flex-1">
                     <div className="flex items-center gap-2">
                       <h3 className="font-semibold text-foreground">
                         {pharmacy.name}
                       </h3>
-                      {pharmacy.hasDelivery && (
-                        <span className="rounded-full bg-primary/10 px-2 py-0.5 text-xs text-primary">
-                          Delivery
-                        </span>
-                      )}
+                      <span className="rounded-full bg-primary/10 px-2 py-0.5 text-xs text-primary">
+                        Jan Aushadhi
+                      </span>
                     </div>
+
                     <p className="text-sm text-muted-foreground">
                       {pharmacy.address}
                     </p>
+
                     <div className="mt-2 flex flex-wrap items-center gap-3 text-xs">
-                      <div className="flex items-center gap-1">
-                        <Star className="h-3 w-3 fill-amber-400 text-amber-400" />
-                        <span>{pharmacy.rating}</span>
-                        <span className="text-muted-foreground">
-                          ({pharmacy.reviews})
-                        </span>
-                      </div>
                       <div className="flex items-center gap-1 text-muted-foreground">
                         <MapPin className="h-3 w-3" />
-                        {pharmacy.distance}
+                        {pharmacy.district}, {pharmacy.state}
                       </div>
-                      <div className="flex items-center gap-1 text-muted-foreground">
-                        <Clock className="h-3 w-3" />
-                        {pharmacy.timing}
-                      </div>
-                    </div>
-                    <div className="mt-2 flex flex-wrap gap-1">
-                      {pharmacy.medicines.slice(0, 3).map((med) => (
-                        <span
-                          key={med}
-                          className="rounded bg-secondary px-2 py-0.5 text-xs text-secondary-foreground"
-                        >
-                          {med}
+
+                      <span className="text-muted-foreground">
+                        PIN: {pharmacy.pincode}
+                      </span>
+
+                      {pharmacy.kendraCode && (
+                        <span className="text-muted-foreground">
+                          Kendra: {pharmacy.kendraCode}
                         </span>
-                      ))}
+                      )}
                     </div>
-                  </div>
-                  <div className="text-right">
-                    <span
-                      className={`inline-flex items-center gap-1 rounded-full px-2 py-1 text-xs font-medium ${
-                        pharmacy.open
-                          ? "bg-green-100 text-green-700"
-                          : "bg-red-100 text-red-700"
-                      }`}
-                    >
-                      <CheckCircle className="h-3 w-3" />
-                      {pharmacy.open ? "Open" : "Closed"}
-                    </span>
                   </div>
                 </div>
               </Card>
             ))}
+            {filteredPharmacies.length > displayLimit && (
+              <Button
+                variant="outline"
+                className="w-full mt-2"
+                onClick={() => setDisplayLimit((prev) => prev + 50)}
+              >
+                Load More Pharmacies
+              </Button>
+            )}
           </div>
 
           {/* Selected Pharmacy Details */}
@@ -326,29 +248,52 @@ export default function PharmacyContent() {
                   <MapPin className="h-4 w-4" />
                   {selectedPharmacy.address}
                 </div>
-                <div className="flex items-center gap-2 text-muted-foreground">
-                  <Clock className="h-4 w-4" />
-                  {selectedPharmacy.timing}
+
+                <div className="text-muted-foreground">
+                  {selectedPharmacy.district}, {selectedPharmacy.state} • PIN{" "}
+                  {selectedPharmacy.pincode}
                 </div>
-                <div className="flex items-center gap-2">
-                  <Phone className="h-4 w-4 text-muted-foreground" />
-                  <a
-                    href={`tel:${selectedPharmacy.phone}`}
-                    className="text-primary hover:underline"
-                  >
-                    {selectedPharmacy.phone}
-                  </a>
+
+                {selectedPharmacy.phone && (
+                  <div className="flex items-center gap-2">
+                    <Phone className="h-4 w-4 text-muted-foreground" />
+                    <a
+                      href={`tel:${selectedPharmacy.phone}`}
+                      className="text-primary hover:underline"
+                    >
+                      {selectedPharmacy.phone}
+                    </a>
+                  </div>
+                )}
+
+                <div className="text-xs text-muted-foreground">
+                  Kendra Code: {selectedPharmacy.kendraCode}
                 </div>
               </div>
+
               <div className="mt-4 flex gap-2">
-                <Button className="flex-1" size="sm">
-                  <Phone className="mr-2 h-4 w-4" />
-                  Call
-                </Button>
-                <Button variant="outline" className="flex-1" size="sm">
-                  <NavIcon className="mr-2 h-4 w-4" />
-                  Directions
-                </Button>
+                {selectedPharmacy.phone && (
+                  <Button className="flex-1" size="sm" asChild>
+                    <a href={`tel:${selectedPharmacy.phone}`}>
+                      <Phone className="mr-2 h-4 w-4" />
+                      Call
+                    </a>
+                  </Button>
+                )}
+
+                {selectedPharmacy.lat != null &&
+                  selectedPharmacy.lng != null && (
+                    <Button variant="outline" className="flex-1" size="sm" asChild>
+                      <a
+                        href={`https://www.google.com/maps/dir/?api=1&destination=${selectedPharmacy.lat},${selectedPharmacy.lng}`}
+                        target="_blank"
+                        rel="noreferrer"
+                      >
+                        <NavIcon className="mr-2 h-4 w-4" />
+                        Directions
+                      </a>
+                    </Button>
+                  )}
               </div>
             </Card>
           )}
@@ -357,4 +302,3 @@ export default function PharmacyContent() {
     </main>
   );
 }
-
